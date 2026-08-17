@@ -1,0 +1,1021 @@
+/* ====================================
+   أنماط قسم الهيرو الجديد
+   ==================================== */
+
+.newHeroSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* الصورة الخلفية الأساسية - hero1.png */
+.hero1Background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero1Image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* البوكس الأبيض - فوق hero2 */
+.whiteBox {
+  position: absolute;
+  top: 0vh; /* في أقصى الأعلى */
+  left: 0;
+  width: 100%;
+  height: 150vh;
+  background: transparent; /* شفاف تماماً */
+  z-index: 21; /* فوق hero2 */
+  display: flex;
+  align-items: center; /* توسيط عمودي للمحتوى الرئيسي */
+  justify-content: center;
+}
+
+/* حاوية النصوص داخل البوكس */
+.textContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* توسيط عمودي للمحتوى */
+  gap: 80px;
+  position: relative; /* مهم للتحكم بالمواضع الداخلية */
+}
+
+/* القسم الأيسر - النص الوصفي */
+.leftSection {
+  flex: 0 0 270px;
+  max-width: 270px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+  position: absolute;
+  top: -58vh;
+  left: 60px;
+}
+
+.sectionLabel {
+  font-size: 1.15rem;
+  color: #6b5640;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+}
+
+.mainDescription {
+  font-size: 1.2rem;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.7;
+  font-weight: 500;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  letter-spacing: 0.01em;
+  max-width: 270px;
+  word-wrap: break-word;
+}
+
+.exploreButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px; /* أكبر */
+  background: transparent;
+  border: 1.5px solid #8b7355;
+  color: #8b7355;
+  font-size: 0.8rem; /* أكبر بوضوح */
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  margin-top: 10px;
+  max-width: 270px;
+  white-space: nowrap;
+}
+
+.exploreButton:hover {
+  background: #8b7355;
+  color: white;
+  transform: translateX(5px);
+}
+
+/* القسم الأوسط - العنوان الكبير */
+.centerSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* توسيط عمودي */
+  gap: 15px;
+  position: absolute; /* موضع مطلق للتوسيط الدقيق */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* توسيط دقيق تماماً */
+  width: auto;
+  max-width: 700px;
+  margin: 0; /* إزالة margin */
+}
+
+.titleWithDivider {
+  display: flex;
+  flex-direction: column; /* عمودي - الخطوط فوق والنصوص تحت */
+  align-items: center;
+  gap: 25px; /* مسافة بين الخطوط والنصوص */
+}
+
+/* حاوية الخطين - على اليمين واليسار */
+.dividersContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 100px; /* المسافة بين الخطين */
+  justify-content: center;
+}
+
+.titlePart {
+  display: flex;
+  flex-direction: row; /* أفقي - النصوص بجانب بعض */
+  align-items: center;
+  gap: 100px; /* مسافة أكبر بين ELEVATED و LIVING */
+  margin-left: -50px; /* لليسار أكثر قليلاً */
+}
+
+.titleGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.mainTitle {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  font-weight: 400;
+  color: #1a1a1a;
+  margin: 0;
+  letter-spacing: 0.15em;
+  font-family: var(--font-playfair), 'Playfair Display', serif;
+  text-transform: uppercase;
+}
+
+/* ELEVATED - أصغر قليلاً */
+.elevatedTitle {
+  font-size: clamp(2.6rem, 5.2vw, 4.8rem); /* أصغر بحوالي 13% */
+}
+
+/* LIVING - الحجم الكامل */
+.livingTitle {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+}
+
+.subtitle {
+  font-size: clamp(0.9rem, 1.2vw, 1.1rem); /* أكبر بكثير */
+  color: #8b7355; /* بني أغمق ليكون أوضح */
+  margin: 0;
+  letter-spacing: 0.2em;
+  font-weight: 600; /* أثقل - من 400 إلى 600 */
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  text-transform: uppercase;
+}
+
+/* الخط الأفقي (العرضي) مع الماسات */
+.verticalDivider {
+  display: flex;
+  flex-direction: row; /* تغيير من column إلى row للخط الأفقي */
+  align-items: center;
+  gap: 12px;
+  width: 200px; /* عرض أقصر للخط الواحد */
+  height: auto;
+}
+
+.topDiamond,
+.bottomDiamond {
+  width: 8px;
+  height: 8px;
+  background: #8b7355; /* بني أغمق ليكون أوضح */
+  transform: rotate(45deg);
+  flex-shrink: 0;
+}
+
+.dividerLine {
+  flex: 1;
+  height: 1.5px; /* تغيير من width إلى height */
+  width: auto; /* تغيير من height إلى width */
+  background: linear-gradient(to right,  /* تغيير من bottom إلى right */
+    #8b7355 0%, /* بني أغمق ليكون أوضح */
+    #8b7355 50%, 
+    #8b7355 100%
+  );
+}
+
+.establishedText {
+  font-size: 0.95rem; /* أكبر بكثير */
+  color: #8b7355; /* بني أغمق ليكون أوضح */
+  margin: 0;
+  letter-spacing: 0.3em;
+  font-weight: 600; /* أثقل - من 400 إلى 600 */
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  text-transform: uppercase;
+}
+
+/* القسم الأيمن - الميزات */
+.rightSection {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: flex-start;
+  position: absolute;
+  top: -58vh;
+  right: 40px;
+}
+
+.featureItem {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.featureIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #8b7355;
+  border-radius: 8px;
+  color: #8b7355;
+  flex-shrink: 0;
+}
+
+.featureText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.featureLabel,
+.featureValue {
+  font-size: 0.8rem; /* أكبر قليلاً */
+  margin: 0;
+  letter-spacing: 0.15em;
+  font-weight: 600;
+  font-family: var(--font-cormorant), 'Cormorant Garamond', serif;
+  text-transform: uppercase;
+  text-align: left;
+}
+
+.featureLabel {
+  color: #8b7355;
+}
+
+.featureValue {
+  color: #2a2a2a;
+}
+
+/* تحسينات للموبايل */
+@media (max-width: 768px) {
+  .whiteBox {
+    align-items: flex-start;
+    padding-top: 22vh;
+    height: 100svh;
+    z-index: 102;
+  }
+
+  .textContainer {
+    flex-direction: column;
+    gap: 0;
+    padding: 0 20px;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .leftSection {
+    position: relative;
+    top: auto;
+    left: auto;
+    flex: none;
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+    order: 2;
+    gap: 10px;
+    display: none;
+  }
+
+  .centerSection {
+    position: relative;
+    left: auto;
+    top: auto;
+    transform: none;
+    order: 1;
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 12px;
+    z-index: 101;
+  }
+
+  .rightSection {
+    display: none;
+  }
+
+  .titleWithDivider {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .dividersContainer {
+    gap: 40px;
+  }
+
+  .verticalDivider {
+    width: 100px;
+  }
+
+  .titlePart {
+    flex-direction: column;
+    gap: 8px;
+    margin-left: 0;
+  }
+
+  .mainTitle {
+    font-size: clamp(2rem, 11vw, 3.2rem);
+    letter-spacing: 0.1em;
+  }
+
+  .elevatedTitle {
+    font-size: clamp(1.8rem, 10vw, 2.8rem);
+  }
+
+  .livingTitle {
+    font-size: clamp(2rem, 11vw, 3.2rem);
+  }
+
+  .subtitle {
+    font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+    letter-spacing: 0.15em;
+  }
+
+  .establishedText {
+    font-size: 0.75rem;
+    letter-spacing: 0.25em;
+    margin-top: 4px;
+  }
+}
+
+/* الصورة الثانية - hero2.png */
+.hero2Container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  z-index: 20;
+}
+
+.hero2Image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hero2Container {
+    max-height: 100vh;
+    width: 185%;
+    left: -42%;
+  }
+}
+
+/* صورة hand-1.png فوق hero222 في المنتصف تماماً */
+.handContainer {
+  position: absolute;
+  top: 48vh;
+  left: 50.4%;
+  transform: translateX(-50%);
+  width: 43%;
+  height: auto;
+  max-height: 35vh;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .handContainer {
+    top: -5vh;
+    width: 65%;
+    max-height: 50vh;
+  }
+}
+
+@keyframes leafSwayMobile {
+  0%   { transform: scale(0.75) rotate(0deg) translateX(0px) translateY(0px); }
+  33%  { transform: scale(0.75) rotate(1.8deg) translateX(6px) translateY(-2px); }
+  66%  { transform: scale(0.75) rotate(-1.8deg) translateX(-6px) translateY(2px); }
+  100% { transform: scale(0.75) rotate(0deg) translateX(0px) translateY(0px); }
+}
+
+@media (max-width: 768px) {
+  .layerImage {
+    height: 20%;
+    width: 20%;
+    opacity: 1;
+    filter: none;
+    -webkit-mask-image: none;
+    mask-image: none;
+    animation: leafSwayMobile 6s ease-in-out infinite;
+  }
+}
+
+/* صورة layer.png فوق hero222 في أقصى اليسار بالأعلى - كبيرة جداً وشفافة */
+@keyframes leafSway {
+  0%   { transform: scale(1.5) rotate(0deg) translateX(0px) translateY(0px); }
+  33%  { transform: scale(1.5) rotate(1.8deg) translateX(6px) translateY(-2px); }
+  66%  { transform: scale(1.5) rotate(-1.8deg) translateX(-6px) translateY(2px); }
+  100% { transform: scale(1.5) rotate(0deg) translateX(0px) translateY(0px); }
+}
+
+@keyframes layer2Sway {
+  0%   { transform: rotate(15deg) translateX(0px) translateY(0px); }
+  30%  { transform: rotate(16deg) translateX(10px) translateY(-12px); }
+  70%  { transform: rotate(14.5deg) translateX(-8px) translateY(-8px); }
+  100% { transform: rotate(15deg) translateX(0px) translateY(0px); }
+}
+
+.layer2Image {
+  position: absolute;
+  bottom: 39%;
+  left: 23%;
+  width: auto;
+  height: 58%;
+  object-fit: contain;
+  z-index: 4;
+  pointer-events: none;
+  transform-origin: bottom center;
+  rotate: unset;
+  opacity: 0.55;
+  filter: sepia(1) saturate(1.2) hue-rotate(9deg) brightness(0.75) blur(.8px);
+  -webkit-filter: sepia(1) saturate(1.2) hue-rotate(9deg) brightness(0.75) blur(.8px);
+  animation: layer2Sway 7s ease-in-out infinite;
+}
+
+.layerImage {
+  position: absolute;
+  top: -8vh;
+  left: -5%;
+  width: auto;
+  height: 150%;
+  max-height: none;
+  object-fit: cover;
+  z-index: 1;
+  opacity: 0.15;
+  pointer-events: none;
+  transform: scale(1.5);
+  transform-origin: top left;
+  filter: sepia(0.6) saturate(1.4) hue-rotate(5deg) brightness(1.05);
+  -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+  animation: leafSway 6s ease-in-out infinite;
+}
+
+/* صورة light1 في الأسفل */
+.lightContainer {
+  position: absolute;
+  bottom: -70vh; /* أسفل أكثر */
+  left: 50.6%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 220px; /* أكبر قليلاً */
+  z-index: 5;
+}
+
+.lightImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* صورة light2 فوق light1 - تظهر تدريجياً */
+.light2Container {
+  position: absolute;
+  bottom: -70vh; /* نفس موضع light1 */
+  left: 50.6%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 220px; /* أكبر قليلاً */
+  z-index: 6; /* فوق light1 */
+}
+
+/* صورة pillow1 في المنتصف - يسار - ثابتة */
+.pillow1Container {
+  position: absolute;
+  top: 66%; /* للأسفل أكثر */
+  left: 59%; /* لليمين أكثر */
+  transform: translate(-120%, -50%);
+  width: auto;
+  max-width: 140px;
+  z-index: 3; /* تحت hero2 */
+  pointer-events: none;
+  rotate: 3deg;
+
+}
+
+/* صورة pillow2 في المنتصف - يمين - ثابتة - فوق pillow1 */
+.pillow2Container {
+  position: absolute;
+  top: 67%; /* للأسفل أكثر */
+  left: 52%; /* لليمين أكثر */
+  transform: translate(20%, -50%);
+  width: auto;
+  max-width: 140px;
+  z-index: 2; /* تحت hero2 */
+  pointer-events: none; 
+    rotate: 5deg;
+        /* filter: drop-shadow(3px 5px 4px rgba(0,0,0,0.28)); */
+
+}
+
+.light2Image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.pillowImage {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* البوكس المستدير لاختيار المخدات */
+.pillowSelector {
+  position: absolute;
+  top: 39%; /* للأسفل أكثر */
+  left: 68%; /* لليمين أكثر */
+  transform: translateX(-50%) scale(0.85); /* أصغر قليلاً */
+  z-index: 9; /* تحت hero2 */
+  display: flex;
+  align-items: center;
+  gap: 12px; /* مسافة أصغر */
+  pointer-events: all; /* يمكن التفاعل معه */
+}
+
+/* الدوائر الصغيرة للتأثير */
+.selectorBubbles {
+  position: absolute; /* موضع مستقل */
+  left: -10px; /* على يسار البوكس */
+  bottom: -30px; /* للأسفل من البوكس */
+  display: flex;
+  flex-direction: column;
+  gap: 4px; /* مسافة قليلة جداً بينهم */
+  align-items: flex-start; /* محاذاة من اليسار - كل واحد بمفرده */
+}
+
+.bubble1 {
+  width: 12px;
+  height: 12px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bubble2 {
+  width: 18px;
+  height: 18px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-left: 6px; /* لليسار قليلاً عن الكبيرة */
+
+}
+
+/* صور المخدات */
+.pillowOptions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: rgba(210, 210, 210, 0.12);
+  border-radius: 50px;
+  border: 1px solid rgba(139, 115, 85, 0.3);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  -webkit-backdrop-filter: blur(13px) saturate(1.4);
+  backdrop-filter: blur(13px) saturate(1.4);
+  transition: all 0.3s ease;
+  isolation: isolate;
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+  .pillowOptions {
+    background: rgba(180, 175, 170, 0.32);
+  }
+}
+
+.pillowOptions:hover {
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  border-color: rgba(139, 115, 85, 0.45);
+  transform: translateY(-2px);
+}
+
+.pillowOption {
+  width: 55px; /* أصغر */
+  height: 55px; /* أصغر */
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 3px solid transparent;
+  background: #f5f5f5;
+  position: relative;
+}
+
+.pillowOption img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.pillowOption:hover {
+  transform: scale(1.1);
+  border-color: #8b7355a5;
+}
+
+.pillowOption:hover img {
+  transform: scale(1.1);
+}
+
+.pillowOptionActive {
+  border-color: #8b7355;
+  box-shadow: 0 4px 20px rgba(139, 115, 85, 0.4);
+  transform: scale(1.05);
+}
+
+.pillowOptionActive::after {
+  content: '✓';
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 20px;
+  height: 20px;
+  background: #8b7355;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* تحسينات للموبايل */
+@media (max-width: 768px) {
+  .pillow1Container {
+    max-width: 70px;
+    left: 72%;
+    top: 60%;
+    transform: translate(-90%, -50%);
+  }
+
+  .pillow2Container {
+    max-width: 70px;
+    left: 66%;
+    top: 60%;
+    transform: translate(-10%, -50%);
+  }
+
+  .lightContainer,
+  .light2Container {
+    max-width: 130px;
+  }
+
+  .pillowSelector {
+    top: 10%;
+    flex-direction: column;
+  }
+  
+  .selectorBubbles {
+    display: none;
+  }
+  
+  .pillowOptions {
+    padding: 10px 15px;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 90vw;
+  }
+  
+  .pillowOption {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+/* حاوية أوراق الشجر المتساقطة */
+.leavesContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 600px; /* عرض أكبر للسماح بالحركة الكاملة لليمين */
+  height: 100%;
+  overflow: visible; /* مهم جداً - يسمح بالحركة خارج الحدود */
+  pointer-events: none;
+  z-index: 3;
+}
+
+.fallingLeaf {
+  position: absolute;
+  width: 80px; /* أصغر قليلاً */
+  height: auto;
+  pointer-events: none;
+  opacity: 1; /* وضوح كامل */
+}
+
+.fallingLeaf img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: 
+    brightness(0) /* يحول الصورة للأسود تماماً */
+    opacity(0.4) /* شفافية خفيفة */
+    drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.1)); /* ظل خفيف */
+}
+
+/* صور الخطوط على اليمين */
+.linesContainer {
+  position: absolute;
+  bottom: 57.3%; /* للأعلى قليلاً */
+  right: 2%; /* لليمين أكثر (رقم أصغر = أقرب لليمين) */
+  display: flex;
+  flex-direction: column;
+  gap: 0; /* بدون مسافة بينهم */
+  z-index: 2; /* مع hero1 */
+}
+
+.lineImage {
+  width: auto;
+  max-width: 110px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  padding: 0;
+  line-height: 0;
+  vertical-align: top;
+}
+
+/* تحكم دقيق بكل صورة */
+.line1 {
+  margin: 0;
+  overflow: visible;
+}
+
+.line2 {
+  margin: -10px 0 0 0; /* مسافة متساوية */
+  overflow: visible;
+}
+
+.line3 {
+  margin: -10px 0 0 0; /* مسافة متساوية */
+  overflow: visible;
+}
+
+.line4 {
+  margin: -10px 0 0 0; /* مسافة متساوية */
+  overflow: visible;
+}
+
+/* تحسينات للموبايل */
+@media (max-width: 768px) {
+  .newHeroSection {
+    height: 100svh;
+  }
+}
+
+/* ====================================
+   أنماط قسم الهيرو القديم (معلق)
+   ==================================== */
+
+.heroSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden; /* إخفاء ما يخرج عن حدود الشاشة */
+  background: linear-gradient(135deg, #faf7f0 0%, #ede5d8 50%, #f2ece0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imagesContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  perspective: 1000px;
+}
+
+.imageWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+}
+
+.image {
+  width: 250px;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  border-radius: 12px;
+  transition: filter 0.3s ease;
+}
+
+.heroContent {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 0 30px;
+  max-width: 1000px;
+}
+
+.heroTitle {
+  font-size: clamp(2rem, 5vw, 4.5rem);
+  font-weight: 400;
+  color: #1a1a1a;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  text-shadow: 
+    0 2px 30px rgba(255, 255, 255, 0.9),
+    0 4px 60px rgba(255, 255, 255, 0.6);
+  position: relative;
+  white-space: nowrap;
+}
+
+/* تأثير توهج خفيف حول النص */
+.heroTitle::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  filter: blur(20px);
+  opacity: 0.3;
+}
+
+/* تحسينات للموبايل */
+@media (max-width: 768px) {
+  .heroSection {
+    height: 100svh;
+  }
+  
+  .image {
+    width: 140px;
+  }
+  
+  .heroTitle {
+    font-size: clamp(2rem, 9vw, 3.5rem);
+    padding: 0 20px;
+  }
+  
+  .heroContent {
+    padding: 0 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .image {
+    width: 100px;
+  }
+}
+
+/* تحسينات للأداء */
+@media (prefers-reduced-motion: reduce) {
+  .imageWrapper {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .heroTitle {
+    animation: none !important;
+  }
+}
+
+/* تأثير ضوء في الخلفية */
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  background: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(255, 255, 255, 0.4) 30%,
+    rgba(255, 255, 255, 0) 70%
+  );
+  z-index: 5;
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+/* تأثيرات إضافية للعمق */
+.heroSection::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(220, 220, 210, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(200, 200, 190, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(240, 240, 235, 0.1) 0%, transparent 60%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* تأثير vignette خفيف */
+.imagesContainer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.03) 100%
+  );
+  pointer-events: none;
+}
+
+/* ===== layer1-1 mobile only ===== */
+@keyframes layerSwayMobile {
+  0%   { transform: scale(0.5) rotate(0deg); }
+  33%  { transform: scale(0.5) rotate(1.5deg); }
+  66%  { transform: scale(0.5) rotate(-1.5deg); }
+  100% { transform: scale(0.5) rotate(0deg); }
+}
+
+@media (max-width: 768px) {
+  .layerImageMobile {
+    opacity: .2 !important;
+    filter: none !important;
+    -webkit-mask-image: none !important;
+    mask-image: none !important;
+    animation: layerSwayMobile 6s ease-in-out infinite !important;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .layerImageMobile {
+    left: 20% !important;
+    opacity: .2 !important;
+scale: 2.5 !important;
+
+  }
+}

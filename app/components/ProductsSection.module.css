@@ -1,0 +1,635 @@
+.productsSection {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(to left, #DFD3C9, #F5EFEC);
+  padding: 0 40px 80px;
+  direction: ltr;
+}
+
+.topImage {
+  position: absolute;
+  top: -390px;
+  left: -5%;
+  width: 110%;
+  z-index: -1;
+}
+
+.topImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+}
+
+.header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 60px;
+  z-index: 1;
+  padding-top: 190px;
+}
+
+.subtitle {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #895F39;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-family: 'Georgia', serif;
+  font-size: 5rem;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #895F39;
+  margin: 0;
+  line-height: 1;
+}
+
+.tagline {
+  font-family: 'Brush Script MT', cursive;
+  font-size: 2.5rem;
+  color: #895F39;
+  margin: 8px 0 4px;
+  font-style: italic;
+  font-weight: 100;
+}
+
+.description {
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  letter-spacing: 4px;
+  color: #895F39;
+  margin: 4px 0;
+}
+
+.heartRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.heartLine {
+  display: block;
+  width: 220px;
+  height: 1px;
+  background: #895F39;
+}
+
+.heartSymbol {
+  font-size: 1.2rem;
+  color: #895F39;
+}
+
+/* Products Grid */
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Product Card */
+.productCard {
+  background: none;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: left;
+  position: relative;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+.productCard:hover {
+  transform: translateY(-10px);
+}
+
+.productNumber {
+  font-family: 'Georgia', serif;
+  font-size: 3rem;
+  font-weight: 300;
+  color: #895F39;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.productName {
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #895F39;
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.productDesc {
+  font-family: 'Georgia', serif;
+  font-size: 0.75rem;
+  color: #895F39;
+  margin: 2px 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.productImageWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+.productImage {
+  max-width: 100%;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.productCard:hover .productImage {
+  transform: scale(1.05);
+}
+
+/* Action Buttons */
+.actionButtons {
+  position: absolute;
+  bottom: 10px;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;
+  transform: translateX(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.productCard:hover .actionButtons {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.actionBtn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(137, 95, 57, 0.3);
+  background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  color: #895F39;
+}
+
+.actionBtn svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s ease;
+}
+
+.actionBtn:hover {
+  background: rgba(137, 95, 57, 0.12);
+  border-color: #895F39;
+  transform: scale(1.1);
+}
+
+.actionBtn:hover svg {
+  transform: scale(1.15);
+}
+
+.wishlistBtn.active {
+  background: rgba(220, 80, 80, 0.1);
+  border-color: #e05555;
+  color: #e05555;
+}
+
+.cartBtn.active {
+  background: rgba(137, 95, 57, 0.15);
+  border-color: #895F39;
+  color: #895F39;
+}
+
+.cartDot {
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 7px;
+  height: 7px;
+  background: #895F39;
+  border-radius: 50%;
+  border: 1.5px solid white;
+}
+
+@keyframes popAnim {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.35); }
+  70%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.actionBtn.pop {
+  animation: popAnim 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 60px;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: #895F39;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* ── Toasts ── */
+.toastContainer {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+@keyframes toastSlide {
+  from { opacity: 0; transform: translateX(60px) scale(0.92); }
+  to   { opacity: 1; transform: translateX(0)   scale(1); }
+}
+
+@keyframes progressBar {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: rgba(255, 252, 248, 0.72);
+  -webkit-backdrop-filter: blur(20px) saturate(1.6);
+  backdrop-filter: blur(20px) saturate(1.6);
+  border: 1px solid rgba(137, 95, 57, 0.2);
+  border-radius: 16px;
+  box-shadow:
+    0 8px 32px rgba(137, 95, 57, 0.12),
+    0 2px 8px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.8);
+  min-width: 240px;
+  max-width: 300px;
+  position: relative;
+  overflow: hidden;
+}
+
+.toastIn {
+  animation: toastSlide 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.toastIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(137, 95, 57, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #895F39;
+}
+
+.toastIcon svg {
+  width: 16px;
+  height: 16px;
+}
+
+.toastText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.toastTitle {
+  font-family: 'Georgia', serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #5a3e28;
+  text-transform: uppercase;
+}
+
+.toastName {
+  font-family: 'Georgia', serif;
+  font-size: 0.72rem;
+  color: #895F39;
+  letter-spacing: 0.5px;
+}
+
+.toastProgress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(to right, #895F39, #c49a6c);
+  border-radius: 0 0 16px 16px;
+  animation: progressBar 3s linear forwards;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .productsGrid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+  .title { font-size: 4rem; }
+  .tagline { font-size: 2rem; }
+}
+
+@media (max-width: 768px) {
+  .productsSection { padding: 60px 20px; }
+  .productsGrid { grid-template-columns: 1fr; gap: 25px; }
+  .title { font-size: 3rem; }
+  .tagline { font-size: 1.5rem; }
+  .productCard { min-height: 350px; padding: 25px; }
+  .productNumber { font-size: 2.5rem; }
+  .productName { font-size: 0.9rem; }
+  .productDesc { font-size: 0.7rem; }
+  .actionButtons { opacity: 1; transform: translateX(0); }
+  .toastContainer { bottom: 20px; right: 16px; }
+}
+
+@media (max-width: 480px) {
+  .title { font-size: 2.5rem; }
+  .subtitle { font-size: 1rem; letter-spacing: 4px; }
+  .tagline { font-size: 1.2rem; }
+  .productsSection { padding: 40px 15px; }
+  .productCard { min-height: 320px; padding: 20px; }
+}
+
+.topImage {
+  position: absolute;
+  top: -390px;
+  left: -5%;
+  width: 110%;
+  z-index: -1;
+}
+
+.topImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
+}
+
+.header {
+  position: relative;
+  text-align: center;
+  margin-bottom: 60px;
+  z-index: 1;
+  padding-top: 190px;
+}
+
+.subtitle {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #895F39;
+  margin-bottom: 4px;
+}
+
+.title {
+  font-family: 'Georgia', serif;
+  font-size: 5rem;
+  font-weight: 400;
+  letter-spacing: 4px;
+  color: #895F39;
+  margin: 0;
+  line-height: 1;
+}
+
+.tagline {
+  font-family: 'Brush Script MT', cursive;
+  font-size: 2.5rem;
+  color: #895F39;
+  margin: 8px 0 4px;
+  font-style: italic;
+  font-weight: 100;
+}
+
+.description {
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  letter-spacing: 4px;
+  color: #895F39;
+  margin: 4px 0;
+}
+
+.heartRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.heartLine {
+  display: block;
+  width: 220px;
+  height: 1px;
+  background: #895F39;
+}
+
+.heartSymbol {
+  font-size: 1.2rem;
+  color: #895F39;
+}
+
+/* Products Grid */
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Product Card */
+.productCard {
+  background: none;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: left;
+  position: relative;
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  min-height: 400px;
+}
+
+.productCard:hover {
+  transform: translateY(-10px);
+}
+
+.productNumber {
+  font-family: 'Georgia', serif;
+  font-size: 3rem;
+  font-weight: 300;
+  color: #895F39;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+
+.productName {
+  font-family: 'Georgia', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: #895F39;
+  margin: 10px 0;
+  text-transform: uppercase;
+}
+
+.productDesc {
+  font-family: 'Georgia', serif;
+  font-size: 0.75rem;
+  color: #895F39;
+  margin: 2px 0;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.productImageWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+.productImage {
+  max-width: 100%;
+  max-height: 250px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.productCard:hover .productImage {
+  transform: scale(1.05);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 60px;
+  font-family: 'Georgia', serif;
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: #895F39;
+}
+
+.footer p {
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .productsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .title {
+    font-size: 4rem;
+  }
+
+  .tagline {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .productsSection {
+    padding: 60px 20px;
+  }
+
+  .productsGrid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .tagline {
+    font-size: 1.5rem;
+  }
+
+  .productCard {
+    min-height: 350px;
+    padding: 25px;
+  }
+
+  .productNumber {
+    font-size: 2.5rem;
+  }
+
+  .productName {
+    font-size: 0.9rem;
+  }
+
+  .productDesc {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    letter-spacing: 4px;
+  }
+
+  .tagline {
+    font-size: 1.2rem;
+  }
+
+  .productsSection {
+    padding: 40px 15px;
+  }
+
+  .productCard {
+    min-height: 320px;
+    padding: 20px;
+  }
+}

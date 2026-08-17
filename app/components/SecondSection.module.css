@@ -1,0 +1,181 @@
+.secondSection {
+  position: fixed;
+  top: 100vh;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 10;
+  overflow: hidden;
+  transition: top 1.2s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: top;
+}
+
+.secondSection.visible {
+  top: 0;
+}
+
+.secondSection.done {
+  top: -100vh;
+  transition: top 0.8s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.imageWrapper {
+  position: absolute;
+  inset: 0;
+  will-change: clip-path;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.75) 0%,
+    rgba(0,0,0,0.45) 40%,
+    rgba(0,0,0,0.45) 60%,
+    rgba(0,0,0,0.88) 100%
+  );
+  z-index: 50;
+  pointer-events: none;
+}
+
+.textBox {
+  position: absolute;
+  bottom: 28%;
+  left: 12%;
+  z-index: 60;
+  text-align: left;
+  max-width: 38%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.2rem;
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.textBoxVisible {
+  opacity: 1;
+}
+
+.topLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  animation: clipReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  clip-path: inset(0 100% 0 0);
+}
+
+.topLabelDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  flex-shrink: 0;
+}
+
+@keyframes clipReveal {
+  from { clip-path: inset(0 100% 0 0); }
+  to   { clip-path: inset(0 0% 0 0);   }
+}
+
+.title {
+  color: #fff;
+  font-size: clamp(2.2rem, 5vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.titleLine { display: block; }
+
+.progressLine {
+  position: absolute;
+  top: 44%;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255,255,255,0.25);
+  z-index: 55;
+  transform: translateY(-50%);
+}
+
+.progressLineFill {
+  height: 100%;
+  background: #fff;
+  will-change: width;
+}
+
+.counterUp   { animation: counterSlideUp   0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.counterDown { animation: counterSlideDown 0.55s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes counterSlideUp {
+  0%   { opacity: 0; transform: translateY(100%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes counterSlideDown {
+  0%   { opacity: 0; transform: translateY(-100%); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.fadeUp   { animation: fadeSlideUp   0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.fadeDown { animation: fadeSlideDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes fadeSlideDown {
+  from { opacity: 0; transform: translateY(-28px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+.btnWrap { display: inline-block; }
+
+.btnEnterUp   { animation: btnFadeUp   0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+.btnEnterDown { animation: btnFadeDown 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.15s both; }
+
+@keyframes btnFadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes btnFadeDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #fff;
+  color: #1a1a1a;
+  border: none;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+.btn:hover { background: #1a1a1a; color: #fff; }

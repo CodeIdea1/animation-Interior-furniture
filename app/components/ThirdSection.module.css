@@ -1,0 +1,186 @@
+.thirdSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(to left, #DFD3C9, #F5EFEC);
+  padding-bottom: 9rem;
+}
+
+.compareContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: col-resize;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.compareInnerWrap {
+  position: relative;
+  width: 65%;
+  height: 62%;
+  margin-top: 2rem;
+  border-radius: 16px;
+  flex-shrink: 0;
+  filter: drop-shadow(10px 12px 8px rgba(0,0,0,0.28));
+}
+
+@keyframes leafDecorSway {
+  0%   { transform: rotate(-10deg) translateX(0px) translateY(0px); }
+  30%  { transform: rotate(-9deg) translateX(8px) translateY(-10px); }
+  70%  { transform: rotate(-11deg) translateX(-6px) translateY(-6px); }
+  100% { transform: rotate(-10deg) translateX(0px) translateY(0px); }
+}
+
+.leafDecor {
+  position: absolute;
+  bottom: -50%;
+  right: -40%;
+  height: 240%;
+  width: auto;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 0;
+  transform-origin: bottom center;
+  filter: brightness(0) invert(0) opacity(0.05);
+  -webkit-mask-image: linear-gradient(to top, transparent 0%, black 35%);
+  mask-image: linear-gradient(to top, transparent 0%, black 35%);
+  animation: leafDecorSway 6s ease-in-out infinite;
+}
+
+.compareInner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* الصورتان */
+.imgBottom,
+.imgTop {
+  position: absolute;
+  inset: 0;
+}
+
+.imgBottom img,
+.imgTop img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  display: block;
+}
+
+/* صورة Before أكبر قليلاً */
+.imgTop img {
+  width: calc(100% + 6px);
+  height: calc(100% + 6px);
+  margin: -3px;
+}
+
+.imgTop {
+  will-change: clip-path;
+}
+
+/* الخط فقط داخل compareInner */
+.dividerLine {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: 20;
+  pointer-events: none;
+  will-change: left;
+}
+
+/* القلم خارج compareInner */
+.dividerHandle {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transform: translateX(-50%);
+  z-index: 25;
+  cursor: col-resize;
+  will-change: left;
+}
+
+.line {
+  position: absolute;
+  left: 50%;
+  top: 20px;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 90%;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+}
+
+/* مقبض السحب */
+.handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: col-resize;
+  margin-top: 300px;
+}
+
+.handle img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+  transform-origin: center center;
+  filter: drop-shadow(0px 12px 6px rgba(0,0,0,0.3));
+}
+
+@keyframes penIdle {
+  0%   { transform: rotate(-20deg) skewX(0deg) skewY(0deg); }
+  25%  { transform: rotate(-16deg) skewX(4deg) skewY(1.5deg); }
+  50%  { transform: rotate(-22deg) skewX(-3deg) skewY(-1deg); }
+  75%  { transform: rotate(-17deg) skewX(2deg) skewY(1deg); }
+  100% { transform: rotate(-20deg) skewX(0deg) skewY(0deg); }
+}
+
+.sectionTitle {
+  font-family: var(--font-bodoni);
+  font-size: 3.5rem;
+  font-weight: 400;
+  font-style: normal;
+  color: #895F39;
+  letter-spacing: -0.02em;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 3rem 0 0.5rem 0;
+  pointer-events: none;
+  position: relative;
+  z-index: 5;
+}
+
+.sectionSubtitle {
+  font-family: var(--font-geist-sans);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #1a1a1a;
+  letter-spacing: 0.35em;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 0;
+  pointer-events: none;
+  position: relative;
+  z-index: 5;
+  margin-top: -10px;
+}
