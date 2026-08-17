@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 
 declare global {
-  interface Window { lenis: Lenis; }
+  interface Window { lenisInstance: Lenis; }
 }
 
 export default function SmoothScroll() {
@@ -20,7 +20,7 @@ export default function SmoothScroll() {
       infinite: false,
     });
 
-    window.lenis = lenis;
+    window.lenisInstance = lenis;
 
     function raf(time: number) {
       lenis.raf(time);

@@ -33,9 +33,9 @@ export default function SecondSection() {
   useEffect(() => {
     // انتظر حتى يكون lenis جاهزاً
     const init = () => {
-      if (!window.lenis) { setTimeout(init, 100); return; }
+      if (!window.lenisInstance) { setTimeout(init, 100); return; }
 
-      window.lenis.on('scroll', ({ scroll }: { scroll: number }) => {
+      window.lenisInstance.on('scroll', ({ scroll }: { scroll: number }) => {
         const scrollY   = scroll;
         const wh        = window.innerHeight;
         const goingDown = scrollY > prevScrollRef.current;
