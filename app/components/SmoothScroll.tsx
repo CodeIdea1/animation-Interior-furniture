@@ -21,9 +21,9 @@ export default function SmoothScroll() {
         listeners.forEach(fn => fn({ scroll: window.scrollY }));
       };
       window.addEventListener('scroll', handler, { passive: true });
-      (window as Window & { lenisInstance: { on: (e: string, fn: (e: { scroll: number }) => void) => void; destroy?: () => void } }).lenisInstance = {
+      window.lenisInstance = {
         on: (_: string, fn: (e: { scroll: number }) => void) => { listeners.push(fn); },
-      };
+      } as unknown as Lenis;
       return () => window.removeEventListener('scroll', handler);
     }
 
