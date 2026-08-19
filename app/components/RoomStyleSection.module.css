@@ -1,3 +1,8 @@
+.sectionWrapper {
+  background: #EAE4DF;
+  width: 100%;
+}
+
 .section {
   position: relative;
   width: 100%;
@@ -5,6 +10,7 @@
   overflow: hidden;
   transform-origin: center center;
   will-change: transform;
+  border-radius: 20px;
 }
 
 .bgImg {

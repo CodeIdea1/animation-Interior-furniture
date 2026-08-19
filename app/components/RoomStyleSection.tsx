@@ -2,8 +2,6 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-gsap.registerPlugin(ScrollTrigger);
 import styles from './RoomStyleSection.module.css';
 import RainCanvas from './RainCanvas';
 
@@ -120,22 +118,20 @@ export default function RoomStyleSection() {
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
-    gsap.fromTo(
-      el,
-      { scale: 0.88, borderRadius: '24px' },
-      {
-        scale: 1,
-        borderRadius: '0px',
-        ease: 'none',
-        scrollTrigger: {
-          trigger: el,
-          start: 'top 90%',
-          end: 'top 10%',
-          scrub: true,
-        },
-      }
-    );
-    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      const winH = window.innerHeight;
+      const progress = Math.min(1, Math.max(0, (winH * 0.95 - rect.top) / (winH * 0.9)));
+      const scale = 0.88 + 0.12 * progress;
+      const radius = 20 * (1 - progress);
+      gsap.set(el, { scale, borderRadius: `${radius}px` });
+    };
+
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.lenisInstance?.on('scroll', update);
+    return () => window.removeEventListener('scroll', update);
   }, []);
 
   const chairRef  = useRef<HTMLDivElement>(null);
@@ -149,6 +145,7 @@ export default function RoomStyleSection() {
   const decor = useSwitch(0, decorRef, 'decor');
 
   return (
+    <div className={styles.sectionWrapper}>
     <section ref={sectionRef} className={styles.section}>
       <RainCanvas visible={rainOn} />
       <img src="/window-tree-1.png" alt="" className={styles.windowTree} />
@@ -225,5 +222,6 @@ export default function RoomStyleSection() {
         ))}
       </div>
     </section>
+    </div>
   );
 }

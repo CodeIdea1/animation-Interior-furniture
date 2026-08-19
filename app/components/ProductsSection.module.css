@@ -2,7 +2,7 @@
   position: relative;
   width: 100%;
   min-height: 100vh;
-  background: linear-gradient(to left, #DFD3C9, #F5EFEC);
+  background: #EAE4DF;
   padding: 0 40px 80px;
   direction: ltr;
 }
@@ -643,7 +643,7 @@
   }
 
   .productsSection {
-    padding: 0px 15px;
+    padding: 0px 15px 50px 15px;
   }
 
   .productCard {
