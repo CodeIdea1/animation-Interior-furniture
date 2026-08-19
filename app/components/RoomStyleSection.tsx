@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 import styles from './RoomStyleSection.module.css';
 import RainCanvas from './RainCanvas';
 
@@ -113,6 +115,29 @@ export default function RoomStyleSection() {
     }
   };
 
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    gsap.fromTo(
+      el,
+      { scale: 0.88, borderRadius: '24px' },
+      {
+        scale: 1,
+        borderRadius: '0px',
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 90%',
+          end: 'top 10%',
+          scrub: true,
+        },
+      }
+    );
+    return () => ScrollTrigger.getAll().forEach(t => t.kill());
+  }, []);
+
   const chairRef  = useRef<HTMLDivElement>(null);
   const treeRef   = useRef<HTMLDivElement>(null);
   const tree2Ref  = useRef<HTMLDivElement>(null);
@@ -124,7 +149,7 @@ export default function RoomStyleSection() {
   const decor = useSwitch(0, decorRef, 'decor');
 
   return (
-    <section className={styles.section}>
+    <section ref={sectionRef} className={styles.section}>
       <RainCanvas visible={rainOn} />
       <img src="/window-tree-1.png" alt="" className={styles.windowTree} />
       <img src="/window-tree-2.png" alt="" className={styles.windowTree2} />
