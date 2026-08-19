@@ -394,7 +394,7 @@
   }
 
   .chairSelector {
-    bottom: 9%;
+    bottom: 3%;
     left: 50%;
     transform: translateX(-50%);
     gap: 14px;
@@ -413,6 +413,7 @@
     padding: 6px 18px;
     border-radius: 50px;
     border: 1px solid rgba(255,255,255,0.2);
+    margin-bottom: 10px;
   }
 
   .tree2Selector {
