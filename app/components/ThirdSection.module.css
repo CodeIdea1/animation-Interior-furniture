@@ -184,3 +184,36 @@
   z-index: 5;
   margin-top: -10px;
 }
+
+@media (max-width: 768px) {
+  .thirdSection {
+    position: relative;
+    z-index: 20;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+    padding-top: 20px;
+    padding-bottom: 340px;
+  }
+
+  .sectionTitle {
+    font-size: 2.3rem;
+  }
+
+  .compareInnerWrap {
+    width: 99%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+  }
+
+  .imgBottom img,
+  .imgTop img {
+    object-fit: contain;
+  }
+
+  .handle {
+    width: 200px;
+    height: 200px;
+    margin-top: 150px;
+  }
+}

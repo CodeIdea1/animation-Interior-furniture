@@ -36,7 +36,9 @@ const HeroSection = () => {
   const line4Ref = useRef<HTMLImageElement>(null);
   const pillow1Ref = useRef<HTMLDivElement>(null);
   const pillow2Ref = useRef<HTMLDivElement>(null);
-  const leavesContainerRef = useRef<HTMLDivElement>(null);
+  const layerRef = useRef<HTMLImageElement>(null);
+
+  const mobilePinRef = useRef<HTMLDivElement>(null);
 
   // وظيفة تغيير الصورة مع أنيميشن احترافي
   const changePillow = (index: number) => {
@@ -74,13 +76,41 @@ const HeroSection = () => {
 
     const isMobile = window.innerWidth <= 768;
 
-    // إنشاء الأنيميشن مع ScrollTrigger
+    // على الموبايل: pin scroll مثل الديسكتوب بنسب مختلفة
+    if (isMobile) {
+      gsap.set(hero1Ref.current,                         { scale: 1.15 });
+      gsap.set([pillow1Ref.current, pillow2Ref.current],  { scale: 1.15 });
+      gsap.set(light2Ref.current,                        { opacity: 0 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: mobilePinRef.current,
+          start: 'top top',
+          end: '+=300%',
+          scrub: 0.5,
+          pin: true,
+        }
+      });
+
+      tl.to(hero1Ref.current,                        { scale: 1,        ease: 'power2.out', duration: 1    }, 0);
+      tl.to([pillow1Ref.current, pillow2Ref.current], { scale: 1,        ease: 'power2.out', duration: 1    }, 0);
+      tl.to(hero2Ref.current,                        { y: '-350%',      ease: 'power2.out', duration: 0.8  }, 0);
+      tl.to(handRef.current,                         { y: '-350%',      ease: 'power2.out', duration: 0.8  }, 0);
+      tl.to(lightRef.current,                        { y: '-260%',      ease: 'power2.out', duration: 0.25 }, 0);
+      tl.to(light2Ref.current,                       { y: '-260%',      ease: 'power2.out', duration: 0.25 }, 0);
+      tl.to(light2Ref.current,                       { opacity: 1,      ease: 'power2.inOut', duration: 0.6 }, 0.1);
+      tl.to(whiteBoxRef.current,                     { y: '-360%',      ease: 'power2.out', duration: 1  }, 0);
+
+      return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
+    }
+
+    // إنشاء الأنيميشن مع ScrollTrigger (desktop فقط)
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: sectionRef.current,
         start: 'top top',
-        end: isMobile ? '+=1200%' : '+=550%',
-        scrub: isMobile ? 4 : 0.5,
+        end: '+=550%',
+        scrub: 0.5,
         pin: true,
       }
     });
@@ -142,9 +172,9 @@ const HeroSection = () => {
 
     // تحريك light1 للأعلى
     tl.to(lightRef.current, {
-      y: isMobile ? '-120%' : '-210%',
+      y: '-210%',
       ease: 'power2.out',
-      duration: 0.5,
+      duration: 0.25,
     }, 0);
 
     // إخفاء light2 في البداية
@@ -155,9 +185,9 @@ const HeroSection = () => {
 
     // تحريك light2 للأعلى
     tl.to(light2Ref.current, {
-      y: isMobile ? '-120%' : '-210%',
+      y: '-210%',
       ease: 'power2.out',
-      duration: 0.5,
+      duration: 0.25,
     }, 0);
 
     // ظهور light2
@@ -224,7 +254,8 @@ const HeroSection = () => {
   // أنيميشن تساقط أوراق الشجر محذوف
 
   return (
-    <section ref={sectionRef} className={styles.newHeroSection}>
+    <div ref={mobilePinRef} className={styles.mobilePinWrapper}>
+    <section ref={sectionRef} data-hero className={styles.newHeroSection}>
       {/* الصورة الخلفية الأساسية - hero1.png */}
       <div ref={hero1Ref} className={styles.hero1Background}>
         <picture>
@@ -330,7 +361,7 @@ const HeroSection = () => {
       <div ref={hero2Ref} className={styles.hero2Container}>
         <img src="/hero2222.png" alt="Hero 2" className={styles.hero2Image} />
         {/* صورة layer.png فوق hero222 في أقصى اليسار بالأعلى */}
-        <img src="/layer1-1.png" alt="Layer" className={`${styles.layerImage} ${styles.layerImageMobile}`} />
+        <img ref={layerRef} src="/layer1-1.png" alt="Layer" className={`${styles.layerImage} ${styles.layerImageMobile}`} />
       </div>
 
       {/* صورة hand-1.png فوق hero222 في المنتصف تماماً */}
@@ -399,6 +430,7 @@ const HeroSection = () => {
 
       {/* حاوية أوراق الشجر المتساقطة محذوفة */}
     </section>
+    </div>
   );
 };
 

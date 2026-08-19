@@ -90,7 +90,7 @@
 .curtain {
   position: absolute;
   top: -5%;
-  left: 0;
+  left: 2%;
   height: 90%;
   width: auto;
   object-fit: contain;
@@ -241,12 +241,21 @@
   transform: scale(1.12);
 }
 
+@keyframes curtainSway {
+  0%   { transform: rotate(0deg); }
+  25%  { transform: rotate(1.2deg); }
+  50%  { transform: rotate(-0.8deg); }
+  75%  { transform: rotate(1deg); }
+  100% { transform: rotate(0deg); }
+}
+
 /* ===== Tablet ===== */
 @media (max-width: 768px) {
   .windowTree,
   .windowTree2 {
-    height: 55%;
+    height: 65%;
     left: 0;
+    top: 10%;
   }
 
   .windowTop {
@@ -256,8 +265,9 @@
   }
 
   .curtain {
-    height: 70%;
-    top: -2%;
+    height: 63%;
+    top: 28%;
+    left: -15%;
   }
 
   .windowClickZone {
@@ -266,15 +276,15 @@
   }
 
   .chairWrap {
-    width: 30%;
+    width: 45%;
     left: 42%;
     bottom: 1%;
   }
 
   .treeWrap {
-    width: 18%;
+    width: 28%;
     left: 14%;
-    bottom: 16%;
+    bottom: 35%;
   }
 
   .tree2Wrap {
@@ -322,19 +332,21 @@
 
   .windowTree,
   .windowTree2 {
-    height: 42%;
+    height: 52%;
     left: -5px;
+    top: 10%;
   }
 
   .windowTop {
-    top: 28px;
-    left: 4px;
-    height: 38%;
+    top: 165px;
+    left: -140px;
+    height: 44%;
   }
 
   .curtain {
-    height: 55%;
-    top: -1%;
+    height: 47%;
+    top: 20%;
+    left: -29%;
   }
 
   .windowClickZone {
@@ -343,15 +355,17 @@
   }
 
   .chairWrap {
-    width: 38%;
+    width: 60%;
     left: 44%;
-    bottom: 0%;
+    bottom: 24%;
+    z-index: 99;
   }
 
   .treeWrap {
-    width: 22%;
-    left: 10%;
-    bottom: 14%;
+    width: 32%;
+    left: 4%;
+    bottom: 36%;
+    z-index: 9;
   }
 
   .tree2Wrap {
@@ -372,15 +386,33 @@
     border-width: 1.5px;
   }
 
+  .chairSelector .dot,
+  .treeSelector .dot {
+    width: 50px;
+    height: 50px;
+    border-width: 2.5px;
+  }
+
   .chairSelector {
-    gap: 6px;
-    bottom: 0.5%;
+    bottom: 9%;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 14px;
+    backdrop-filter: blur(8px);
+    padding: 6px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.2);
   }
 
   .treeSelector {
-    gap: 6px;
-    bottom: 0.5%;
-    left: 1%;
+    bottom: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 14px;
+    backdrop-filter: blur(8px);
+    padding: 6px 18px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.2);
   }
 
   .tree2Selector {
@@ -393,5 +425,16 @@
     gap: 5px;
     top: 5%;
     right: 2%;
+  }
+}
+
+@media (max-width: 768px) {
+  .section {
+    position: relative;
+    z-index: 20;
+  }
+
+  .hideOnMobile {
+    display: none !important;
   }
 }

@@ -52,6 +52,7 @@ function useSwitch(initial = 0, ref: React.RefObject<HTMLDivElement | null>, typ
 
 export default function RoomStyleSection() {
   const windowRef  = useRef<HTMLImageElement>(null);
+  const curtainRef  = useRef<HTMLImageElement>(null);
   const isOpenRef  = useRef(false);
   const audioRef   = useRef<HTMLAudioElement | null>(null);
   const [rainOn, setRainOn] = useState(false);
@@ -59,8 +60,9 @@ export default function RoomStyleSection() {
   const toggleWindow = () => {
     if (!windowRef.current) return;
     isOpenRef.current = !isOpenRef.current;
+    const isOpen = isOpenRef.current;
 
-    if (isOpenRef.current) {
+    if (isOpen) {
       if (!audioRef.current) {
         audioRef.current = new Audio('/sounds/rain.mp3');
         audioRef.current.loop = true;
@@ -70,13 +72,45 @@ export default function RoomStyleSection() {
       audioRef.current?.pause();
     }
 
-    setRainOn(isOpenRef.current);
+    setRainOn(isOpen);
+
     gsap.to(windowRef.current, {
-      y: isOpenRef.current ? '-55%' : '0%',
-      rotation: isOpenRef.current ? 8 : 0,
+      y: isOpen ? '-55%' : '0%',
+      rotation: isOpen ? 8 : 0,
       duration: 0.8,
-      ease: isOpenRef.current ? 'power2.out' : 'power2.in',
+      ease: isOpen ? 'power2.out' : 'power2.in',
     });
+
+    // تحريك الستارة في كل الشاشات
+    if (curtainRef.current) {
+      const isMobile = window.innerWidth <= 480;
+      const translateX = isMobile ? '-10%' : '-5%';
+      if (isOpen) {
+        gsap.to(curtainRef.current, {
+          x: translateX,
+          duration: 1.1,
+          ease: 'power2.out',
+          onComplete: () => {
+            gsap.to(curtainRef.current, {
+              rotation: 1.2,
+              duration: 2,
+              ease: 'sine.inOut',
+              yoyo: true,
+              repeat: -1,
+              transformOrigin: 'top center',
+            });
+          },
+        });
+      } else {
+        gsap.killTweensOf(curtainRef.current);
+        gsap.to(curtainRef.current, {
+          x: '0%',
+          rotation: 0,
+          duration: 1.1,
+          ease: 'power2.inOut',
+        });
+      }
+    }
   };
 
   const chairRef  = useRef<HTMLDivElement>(null);
@@ -94,9 +128,12 @@ export default function RoomStyleSection() {
       <RainCanvas visible={rainOn} />
       <img src="/window-tree-1.png" alt="" className={styles.windowTree} />
       <img src="/window-tree-2.png" alt="" className={styles.windowTree2} />
-      <img src="/sec4-11.png" alt="" className={styles.bgImg} />
+      <picture>
+        <source srcSet="/sec-mobile.png" media="(max-width: 768px)" />
+        <img src="/sec4-11.png" alt="" className={styles.bgImg} />
+      </picture>
       <img ref={windowRef} src="/window-3.png" alt="" className={styles.windowTop} />
-      <img src="/curtain.png" alt="" className={styles.curtain} />
+      <img ref={curtainRef} src="/curtain.png" alt="" className={styles.curtain} />
       <div className={styles.windowClickZone} onClick={toggleWindow} />
 
       {/* الكرسي - منتصف السيكشن */}
@@ -116,10 +153,10 @@ export default function RoomStyleSection() {
       </div>
 
       {/* الشجرة اليسارية */}
-      <div ref={tree2Ref} className={styles.tree2Wrap}>
+      <div ref={tree2Ref} className={`${styles.tree2Wrap} ${styles.hideOnMobile}`}>
         <img src={trees2[tree2.idx]} alt="Tree 2" className={styles.treeImg} />
       </div>
-      <div className={styles.tree2Selector}>
+      <div className={`${styles.tree2Selector} ${styles.hideOnMobile}`}>
         {trees2.map((_, i) => (
           <div
             key={i}
@@ -148,10 +185,10 @@ export default function RoomStyleSection() {
       </div>
 
       {/* اللوحات - فوق الشجرة يميناً */}
-      <div ref={decorRef} className={styles.decorWrap}>
+      <div ref={decorRef} className={`${styles.decorWrap} ${styles.hideOnMobile}`}>
         <img src={decors[decor.idx]} alt="Decor" className={styles.decorImg} />
       </div>
-      <div className={styles.decorSelector}>
+      <div className={`${styles.decorSelector} ${styles.hideOnMobile}`}>
         {decors.map((_, i) => (
           <div
             key={i}

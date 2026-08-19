@@ -13,7 +13,7 @@ export default function Home() {
       <div className={styles.pageWrapper}>
         <HeroSection />
         <SecondSection />
-        <div style={{ height: '510vh', background: 'linear-gradient(to left, #DFD3C9, #F5EFEC)' }} />
+        <div className={styles.scrollSpacer} />
         <ThirdSection />
         <ProductsSection />
         <RoomStyleSection />

@@ -1,3 +1,13 @@
+.mobilePinWrapper {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .mobilePinWrapper {
+    /* GSAP ScrollTrigger سيضيف height تلقائياً عند pin */
+  }
+}
+
 /* ====================================
    أنماط قسم الهيرو الجديد
    ==================================== */
@@ -295,6 +305,7 @@
     padding-top: 22vh;
     height: 100svh;
     z-index: 102;
+    will-change: transform;
   }
 
   .textContainer {
@@ -701,25 +712,30 @@
   .pillow1Container {
     max-width: 70px;
     left: 72%;
-    top: 60%;
+    top: 64%;
     transform: translate(-90%, -50%);
   }
 
   .pillow2Container {
     max-width: 70px;
     left: 66%;
-    top: 60%;
+    top: 64%;
     transform: translate(-10%, -50%);
   }
 
   .lightContainer,
   .light2Container {
     max-width: 130px;
+    bottom: -15vh;
+    left: calc(50.6% + 2px);
   }
 
   .pillowSelector {
-    top: 10%;
-    flex-direction: column;
+    top: auto;
+    bottom: 50%;
+    left: 50%;
+    transform: translateX(-50%);
+    flex-direction: row;
   }
   
   .selectorBubbles {
@@ -727,16 +743,15 @@
   }
   
   .pillowOptions {
-    padding: 10px 15px;
-    gap: 10px;
-    flex-wrap: wrap;
+    padding: 8px 12px;
+    gap: 8px;
+    flex-wrap: nowrap;
     justify-content: center;
-    max-width: 90vw;
   }
   
   .pillowOption {
-    width: 50px;
-    height: 50px;
+    width: 42px;
+    height: 42px;
   }
 }
 
@@ -813,10 +828,17 @@
   overflow: visible;
 }
 
-/* تحسينات للموبايل */
 @media (max-width: 768px) {
   .newHeroSection {
     height: 100svh;
+  }
+
+  .linesContainer {
+    display: none;
+  }
+
+  .layer2Image {
+    display: none;
   }
 }
 
