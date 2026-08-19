@@ -581,61 +581,90 @@
 }
 
 @media (max-width: 768px) {
-    .header {
+  .header {
     padding-top: 0px;
+    margin-bottom: 30px;
   }
+
   .productsSection {
     padding: 0px 20px;
   }
 
-  .topImage{
-    top: -150px;
+  .topImage {
+    top: -110px;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    letter-spacing: 3px;
+  }
+
+  .title {
+    font-size: 2.4rem;
+    letter-spacing: 3px;
+  }
+
+  .tagline {
+    font-size: 1.4rem;
+    margin: 4px 0 2px;
+  }
+
+  .description {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+  }
+
+  .heartLine {
+    width: 80px;
   }
 
   .productsGrid {
     grid-template-columns: repeat(2, 1fr);
     gap: 15px;
-  }
-
-  .title {
-    font-size: 3rem;
-  }
-
-  .tagline {
-    font-size: 1.5rem;
+    padding: 0px ;
   }
 
   .productCard {
-    min-height: 350px;
-    padding: 25px;
+    min-height: 280px;
+    padding: 15px;
   }
 
   .productNumber {
-    font-size: 2.5rem;
+    font-size: 1.8rem;
+    margin-bottom: 4px;
   }
 
   .productName {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    margin: 4px 0;
   }
 
   .productDesc {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.5px;
   }
 
   .productImage {
-    max-height: 350px;
+    max-height: 200px;
+  }
+
+  .footer {
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    margin-top: 30px;
   }
 }
 
 @media (max-width: 480px) {
-
   .title {
-    font-size: 2.5rem;
+    font-size: 2rem;
+    letter-spacing: 2px;
   }
 
   .subtitle {
-    font-size: 1rem;
-    letter-spacing: 4px;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
   }
 
   .tagline {
@@ -643,11 +672,23 @@
   }
 
   .productsSection {
-    padding: 0px 15px 50px 15px;
+    padding: 0px 12px 50px 12px;
   }
 
   .productCard {
-    min-height: 320px;
-    padding: 20px;
+    min-height: 260px;
+    padding: 12px;
+  }
+
+  .productNumber {
+    font-size: 1.5rem;
+  }
+
+  .productName {
+    font-size: 0.7rem;
+  }
+
+  .productDesc {
+    font-size: 0.55rem;
   }
 }

@@ -95,9 +95,9 @@ const HeroSection = () => {
       tl.to(hero1Ref.current,                        { scale: 1,        ease: 'power2.out', duration: 1    }, 0);
       tl.to([pillow1Ref.current, pillow2Ref.current], { scale: 1,        ease: 'power2.out', duration: 1    }, 0);
       tl.to(hero2Ref.current,                        { y: '-350%',      ease: 'power2.out', duration: 0.8  }, 0);
-      tl.to(handRef.current,                         { y: '-350%',      ease: 'power2.out', duration: 0.8  }, 0);
-      tl.to(lightRef.current,                        { y: '-260%',      ease: 'power2.out', duration: 0.25 }, 0);
-      tl.to(light2Ref.current,                       { y: '-260%',      ease: 'power2.out', duration: 0.25 }, 0);
+      tl.to(handRef.current,                         { y: '-350%',      ease: 'power2.out', duration: 0.5  }, 0);
+      tl.to(lightRef.current,                        { y: '-175%',      ease: 'power2.out', duration: 0.25 }, 0);
+      tl.to(light2Ref.current,                       { y: '-175%',      ease: 'power2.out', duration: 0.25 }, 0);
       tl.to(light2Ref.current,                       { opacity: 1,      ease: 'power2.inOut', duration: 0.6 }, 0.1);
       tl.to(whiteBoxRef.current,                     { y: '-360%',      ease: 'power2.out', duration: 1  }, 0);
 
@@ -366,7 +366,10 @@ const HeroSection = () => {
 
       {/* صورة hand-1.png فوق hero222 في المنتصف تماماً */}
       <div ref={handRef} className={styles.handContainer}>
-        <img src="/hand3.png" alt="Hand" className={styles.handImage} />
+        <picture>
+          <source srcSet="/hand-mobile.png" media="(max-width: 768px)" />
+          <img src="/hand3.png" alt="Hand" className={styles.handImage} />
+        </picture>
       </div>
 
       {/* صورة light1.png في منتصف السيكشن */}

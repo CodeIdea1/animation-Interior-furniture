@@ -193,7 +193,7 @@
     min-height: 100vh;
     overflow: visible;
     padding-top: 20px;
-    padding-bottom: 340px;
+    padding-bottom: 0px;
   }
 
   .sectionTitle {

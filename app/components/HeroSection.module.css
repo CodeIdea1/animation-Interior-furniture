@@ -433,7 +433,7 @@
 
 @media (max-width: 768px) {
   .handContainer {
-    top: -5vh;
+    top: 9.7vh;
     width: 65%;
     max-height: 50vh;
   }
@@ -712,14 +712,14 @@
   .pillow1Container {
     max-width: 70px;
     left: 72%;
-    top: 64%;
+    top: 68%;
     transform: translate(-90%, -50%);
   }
 
   .pillow2Container {
     max-width: 70px;
     left: 66%;
-    top: 64%;
+    top: 68%;
     transform: translate(-10%, -50%);
   }
 
