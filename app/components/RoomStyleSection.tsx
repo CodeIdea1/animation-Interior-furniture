@@ -2,13 +2,31 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import styles from './RoomStyleSection.module.css';
 import RainCanvas from './RainCanvas';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 const chairs = ['/chair--1.webp', '/chair--2.webp', '/chair--3.webp', '/chair--4.webp'];
 const trees  = ['/tree1--1.webp', '/tree1--2.webp', '/tree1--3.webp', '/tree1--4.webp'];
 const trees2 = ['/tree--2-1.webp', '/tree--2-2.webp', '/tree--2-3.webp', '/tree--2-4.webp'];
 const decors = ['/decor1.webp', '/decor2.webp', '/decor3.webp', '/decor44.webp'];
+
+const SECTION_IMAGES = [
+  '/sec4-11.webp',
+  '/sec-mobile.webp',
+  '/window-tree-1.webp',
+  '/window-tree-2.webp',
+  '/window-3.webp',
+  '/curtain.webp',
+  ...chairs,
+  ...trees,
+  ...trees2,
+  ...decors,
+];
 
 type SwitchType = 'chair' | 'tree' | 'tree2' | 'decor';
 
@@ -116,22 +134,47 @@ export default function RoomStyleSection() {
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
+    SECTION_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+      if ('decode' in img) {
+        img.decode().catch(() => {});
+      }
+    });
+  }, []);
+
+  useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
 
-    const update = () => {
-      const rect = el.getBoundingClientRect();
-      const winH = window.innerHeight;
-      const progress = Math.min(1, Math.max(0, (winH * 0.95 - rect.top) / (winH * 0.9)));
-      const scale = 0.88 + 0.12 * progress;
-      const radius = 20 * (1 - progress);
-      gsap.set(el, { scale, borderRadius: `${radius}px` });
+    let lastProgress = -1;
+    let lastRadius = -1;
+
+    const apply = (progress: number) => {
+      const p = Math.round(progress * 100) / 100;
+      if (p === lastProgress) return;
+      lastProgress = p;
+
+      gsap.set(el, { scale: 0.88 + 0.12 * p });
+
+      const radius = Math.round(20 * (1 - p));
+      if (radius !== lastRadius) {
+        lastRadius = radius;
+        el.style.borderRadius = `${radius}px`;
+      }
     };
 
-    update();
-    window.addEventListener('scroll', update, { passive: true });
-    window.lenisInstance?.on('scroll', update);
-    return () => window.removeEventListener('scroll', update);
+    const st = ScrollTrigger.create({
+      trigger: el,
+      start: 'top 95%',
+      end: 'top 5%',
+      onUpdate: (self) => apply(self.progress),
+      onRefresh: (self) => apply(self.progress),
+    });
+
+    apply(st.progress);
+
+    return () => st.kill();
   }, []);
 
   const chairRef  = useRef<HTMLDivElement>(null);
@@ -154,8 +197,14 @@ export default function RoomStyleSection() {
         <source srcSet="/sec-mobile.webp" media="(max-width: 768px)" />
         <img src="/sec4-11.webp" alt="" className={styles.bgImg} />
       </picture>
-      <img ref={windowRef} src="/window-3.webp" alt="" className={styles.windowTop} />
-      <img ref={curtainRef} src="/curtain.webp" alt="" className={styles.curtain} />
+      {/* ★ مرحلة الصورة: على الديسكتوب بقت مربوطة بنسبة رسم الخلفية نفسها،
+          فالشباك والستارة بيفضلوا في نفس مكانهم بالنسبة للرسمة مهما
+          كبّرت أو صغّرت نافذة الديسكتوب (نفس حل المخدات في الهيرو).
+          تحت 768px المرحلة display:contents — يعني مفيش أي تغيير موبايل. */}
+      <div className={styles.sceneStage}>
+        <img ref={windowRef} src="/window-3.webp" alt="" className={styles.windowTop} />
+        <img ref={curtainRef} src="/curtain.webp" alt="" className={styles.curtain} />
+      </div>
       <div className={styles.windowClickZone} onClick={toggleWindow} />
 
       {/* الكرسي - منتصف السيكشن */}

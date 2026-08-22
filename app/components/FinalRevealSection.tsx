@@ -10,7 +10,7 @@ if (typeof window !== 'undefined') {
 }
 
 const DESKTOP_IMAGES = ['/sec6-in2.png', '/sec6-1111.webp', '/sec6-2222.webp', '/door-1-1.webp', '/door-1-2.webp'];
-const MOBILE_IMAGES  = ['/sec6-in2.png', '/sec6-mobile-1.webp', '/sec6-mobile-2.webp', '/door-1-1.webp', '/door-1-2.webp'];
+const MOBILE_IMAGES  = ['/sec6-in2-mobile.png', '/sec6-mobile-1-2.webp', '/sec6-mobile-2-2.webp', '/door-1-1.webp', '/door-1-2.webp'];
 
 const SCROLL_LENGTH_VH = 220;
 
@@ -40,6 +40,8 @@ export default function FinalRevealSection() {
     const doorRight = doorRightRef.current;
     if (!section || !fgImg || !zoomWrap || !doorLeft || !doorRight) return;
 
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+
     gsap.set(fgImg, { opacity: 0 });
     gsap.set(zoomWrap, { transformOrigin: 'center center' });
     gsap.set(doorLeft, { transformOrigin: 'center center', skewX: 0 });
@@ -57,10 +59,17 @@ export default function FinalRevealSection() {
       },
     });
 
+    const doorSpread = isMobile ? 12 : 40;
+
+    // ★ مقدار الإزاحة الأفقية مع الزوم:
+    // - موبايل: زي ما هي بالظبط (-330)
+    // - ديسكتوب: أقل قليلاً لليمين (-290 بدل -330) بنفس قيمة الزوم
+    const revealXPercent = isMobile ? -330 : -275;
+
     tl.to(fgImg, { opacity: 1, ease: 'power1.inOut' }, 0)
-      .to(zoomWrap, { scale: 11.5, xPercent: -277, yPercent: -55, ease: 'power2.inOut'}, 1)
-      .to(doorLeft, { skewX: -73, rotate: -72, scale: 0.3, translateX: -40, ease: 'power1.inOut', duration: 0.3 }, 1)
-      .to(doorRight, { skewX: 73,  rotate: 72, scale: 0.3, translateX: 40, ease: 'power1.inOut', duration: 0.3 }, 1)
+      .to(zoomWrap, { scale: 11.5, xPercent: revealXPercent, yPercent: -55, ease: 'power2.inOut'}, 1)
+      .to(doorLeft, { skewX: -73, rotate: -72, scale: 0.3, x: -doorSpread, ease: 'power1.inOut', duration: 0.3 }, 1)
+      .to(doorRight, { skewX: 73,  rotate: 72, scale: 0.3, x: doorSpread, ease: 'power1.inOut', duration: 0.3 }, 1)
       .to(zoomWrap, { opacity: 0, ease: 'power1.inOut',  }, 2);
 
     return () => {
@@ -72,19 +81,28 @@ export default function FinalRevealSection() {
 
   return (
     <section ref={sectionRef} id="finale" className={styles.section}>
-      <img src="/sec6-in2.png" alt="" className={styles.staticImg} draggable={false} decoding="async" />
+      <picture>
+        <source srcSet="/sec6-in2-mobile.png" media="(max-width: 768px)" />
+        <img src="/sec6-in2.png" alt="" className={styles.staticImg} draggable={false} decoding="async" />
+      </picture>
       <div ref={zoomWrapRef} className={styles.zoomWrap}>
-        <picture>
-          <source srcSet="/sec6-mobile-1.webp" media="(max-width: 768px)" />
-          <img src="/sec6-111.webp" alt="" className={styles.bgImg} draggable={false} decoding="async" />
-        </picture>
-        <picture>
-          <source srcSet="/sec6-mobile-2.webp" media="(max-width: 768px)" />
-          <img ref={fgImgRef} src="/sec6-2222.webp" alt="" className={styles.fgImg} draggable={false} decoding="async" />
-        </picture>
-        <div className={styles.doorWrap}>
-          <img ref={doorLeftRef} src="/door-1-1.webp" alt="" className={styles.doorLeaf} draggable={false} decoding="async" />
-          <img ref={doorRightRef} src="/door-1-2.webp" alt="" className={styles.doorLeaf} draggable={false} decoding="async" />
+        {/* ★ مرحلة الصورة: على الديسكتوب بتطابق مستطيل رسم الخلفية
+            (نسبة 1704/923) فالبابين بيفضلوا في نفس مكانهم بالنسبة
+            للرسمة مع تكبير/تصغير النافذة وأثناء الزوم كمان.
+            تحت 769px: display:contents — موبايل زي ما هو. */}
+        <div className={styles.sceneStage}>
+          <picture>
+            <source srcSet="/sec6-mobile-1-2.webp" media="(max-width: 768px)" />
+            <img src="/sec6-111.webp" alt="" className={styles.bgImg} draggable={false} decoding="async" />
+          </picture>
+          <picture>
+            <source srcSet="/sec6-mobile-2-2.webp" media="(max-width: 768px)" />
+            <img ref={fgImgRef} src="/sec6-2222.webp" alt="" className={styles.fgImg} draggable={false} decoding="async" />
+          </picture>
+          <div className={styles.doorWrap}>
+            <img ref={doorLeftRef} src="/door-1-1.webp" alt="" className={styles.doorLeaf} draggable={false} decoding="async" />
+            <img ref={doorRightRef} src="/door-1-2.webp" alt="" className={styles.doorLeaf} draggable={false} decoding="async" />
+          </div>
         </div>
       </div>
     </section>

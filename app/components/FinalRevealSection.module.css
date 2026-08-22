@@ -54,3 +54,48 @@
   width: auto;
   display: block;
 }
+
+/* ★★ مرحلة الصورة (نفس حل الهيرو وRoomStyleSection) — ديسكتوب فقط:
+   الخلفية sec6-111/sec6-2222 نسبتهم 1704/923 ≈ 1.8464 وبيترسموا بـ
+   object-fit:cover، فمستطيل الرسم بيتغير مع نسبة الشاشة، بينما
+   doorWrap كانت مربوطة بنسب الـ viewport نفسها (right: 20%) —
+   فالبابين كانوا بيعلوا عن مكانهم في المشهد مع تكبير/تصغير النافذة.
+   الحل: مرحلة شفافة بنسبة الصورة نفسها جوه zoomWrap بتطابق مستطيل
+   رسم الكوفر بالظبط، والبابين جواها بإحداثيات % من المرحلة فيبقوا
+   ملتصقين بنفس نقطة الرسمة — وكمان أثناء الزوم GSAP لأن المرحلة
+   بيتحرك مع zoomWrap كوحدة واحدة.
+   تحت 769px: display:contents — موبايل مش بيتغير نهائيًا. */
+.sceneStage {
+  display: contents;
+}
+
+@media (min-width: 769px) {
+  .sceneStage {
+    display: block;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: max(100%, calc(100vh * 1.8464));
+    height: auto;
+    aspect-ratio: 1704 / 923;
+    pointer-events: none;
+  }
+
+  /* القيمة محولة من right: 20% القديمة عند مرجع ديسكتوب نموذجي:
+     حافة الباب اليمين ثابتة عند ~24% من عرض المرحلة بدل الشاشة.
+     top و height فاضلين زي ما هم لأن ارتفاع المرحلة = ارتفاع
+     الشاشة في كل مقاسات الديسكتوب العملية. */
+  .doorWrap {
+    top: 29%;
+    right: 20%;
+    height: 57%;
+  }
+}
+
+@media (max-width: 768px) {
+  .doorWrap {
+    height: 33%;
+    right: 40px;
+    top: 40%;
+  }
+}

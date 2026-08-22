@@ -15,6 +15,7 @@ export default function RainCanvas({ visible }: { visible: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef   = useRef<number>(0);
   const alphaRef  = useRef(0);
+  const inViewRef = useRef(true);
 
   useEffect(() => {
     const canvas = canvasRef.current!;
@@ -37,51 +38,66 @@ export default function RainCanvas({ visible }: { visible: boolean }) {
       width:   Math.random() * 1.2 + 0.8,
     }));
 
-    const ANGLE = -0.22; // ميل المطر لليسار
+    const ANGLE = -0.22;
 
     const draw = () => {
-      // fade in/out
+      animRef.current = 0;
+
       if (visible && alphaRef.current < 1)  alphaRef.current = Math.min(1, alphaRef.current + 0.02);
       if (!visible && alphaRef.current > 0) alphaRef.current = Math.max(0, alphaRef.current - 0.03);
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (alphaRef.current > 0) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.save();
+        ctx.globalAlpha = alphaRef.current;
 
-      if (alphaRef.current <= 0) { animRef.current = requestAnimationFrame(draw); return; }
+        drops.forEach(d => {
+          ctx.beginPath();
+          ctx.moveTo(d.x, d.y);
+          ctx.lineTo(d.x + Math.sin(ANGLE) * d.len, d.y + Math.cos(ANGLE) * d.len);
+          ctx.strokeStyle = `rgba(180,210,255,${d.opacity})`;
+          ctx.lineWidth   = d.width;
+          ctx.lineCap     = 'round';
+          ctx.stroke();
 
-      ctx.save();
-      ctx.globalAlpha = alphaRef.current;
+          d.x += Math.sin(ANGLE) * d.speed * 0.4;
+          d.y += Math.cos(ANGLE) * d.speed;
 
-      drops.forEach(d => {
-        // قطرة المطر
-        ctx.beginPath();
-        ctx.moveTo(d.x, d.y);
-        ctx.lineTo(d.x + Math.sin(ANGLE) * d.len, d.y + Math.cos(ANGLE) * d.len);
-        ctx.strokeStyle = `rgba(180,210,255,${d.opacity})`;
-        ctx.lineWidth   = d.width;
-        ctx.lineCap     = 'round';
-        ctx.stroke();
+          if (d.y > canvas.height + 20) {
+            d.y = -20;
+            d.x = Math.random() * canvas.width;
+          }
+          if (d.x > canvas.width + 20) d.x = -20;
+        });
 
-        // تحريك القطرة
-        d.x += Math.sin(ANGLE) * d.speed * 0.4;
-        d.y += Math.cos(ANGLE) * d.speed;
+        ctx.restore();
 
-        // إعادة القطرة من الأعلى
-        if (d.y > canvas.height + 20) {
-          d.y = -20;
-          d.x = Math.random() * canvas.width;
+        if (alphaRef.current <= 0.001) {
+          alphaRef.current = 0;
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
-        if (d.x > canvas.width + 20) d.x = -20;
-      });
+      }
 
-      ctx.restore();
-      animRef.current = requestAnimationFrame(draw);
+      if (inViewRef.current || alphaRef.current > 0) {
+        animRef.current = requestAnimationFrame(draw);
+      }
     };
+
+    const io = new IntersectionObserver(([entry]) => {
+      inViewRef.current = entry.isIntersecting;
+      if (inViewRef.current && animRef.current === 0) {
+        animRef.current = requestAnimationFrame(draw);
+      }
+    }, { threshold: 0 });
+    io.observe(canvas);
 
     animRef.current = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(animRef.current);
+      animRef.current = 0;
       window.removeEventListener('resize', resize);
+      io.disconnect();
     };
   }, [visible]);
 

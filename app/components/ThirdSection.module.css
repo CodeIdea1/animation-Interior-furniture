@@ -55,6 +55,9 @@
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
+  /* ★ ترقية الطبقة المقنّعة (masked layer) مبكرًا: الـ mask بتتطبق
+     على طبقة جاهزة بدل ما تتحدد في أول فريم دخول للسيكشن */
+  transform: translateZ(0);
   -webkit-mask-image: linear-gradient(to top, transparent 0%, black 35%);
   mask-image: linear-gradient(to top, transparent 0%, black 35%);
 }
@@ -104,9 +107,15 @@
 }
 
 /* ★ الشادو على sec3-2-2.webp فقط (الصورة السفلية After) —
-   sec3-1-1.webp (Before) من غير أي filter. */
+   sec3-1-1.webp (Before) من غير أي filter.
+   translateZ(0) بيترقّى الصورة لطبقة composited خاصة بيها من لحظة
+   الـ mount — يعني الـ rasterize المكلف بتاع الـ drop-shadow بيحصل
+   وهيا برّه الشاشة وقت فاضي، بدل ما يحصل في نفس الفريم اللي بيدخل فيه
+   السيكشن الشاشة أثناء السكرول (ده كان السبب الرئيسي للتهنيج عند
+   الدخول). بعد كده السكرول بيكفيه إنه يحرّك الطبقة الجاهزة على الـ GPU. */
 .imgBottom img {
   filter: drop-shadow(10px 12px 9px rgba(0, 0, 0, 0.368));
+  transform: translateZ(0);
 }
 
 /* صورة Before أكبر قليلاً */
@@ -114,6 +123,7 @@
   width: calc(100% + 6px);
   height: calc(100% + 6px);
   margin: -3px;
+  transform: translateZ(0);
 }
 
 .imgTop {
@@ -128,7 +138,6 @@
   transform: translateX(-50%);
   z-index: 20;
   pointer-events: none;
-  will-change: left;
 }
 
 /* القلم خارج compareInner */
@@ -139,7 +148,6 @@
   transform: translateX(-50%);
   z-index: 25;
   cursor: col-resize;
-  will-change: left;
 }
 
 .line {
@@ -177,6 +185,15 @@
   pointer-events: none;
   transform-origin: center center;
   filter: drop-shadow(0px 12px 6px rgba(0,0,0,0.3));
+  /* ★ نفس فلسفة ترقية الطبقات: القلم (اللي عليه drop-shadow) بيتحرك
+     بالـ transform، فبنضمن إنه على طبقة خاصة من البداية + الحركة
+     بتتعامل مع الـ compositor مباشرة من غير إعادة رسم */
+  will-change: transform;
+  /* ★ الوضع الابتدائي قبل أول حركة ماوس (نفس القيم اللي كانت بتترندر
+     أول مرة: rotate -8deg والباقي أصفار) — والـ transition هنا بدل
+     inline style عشان متت recreatedش مع كل render */
+  transform: rotate(-8deg);
+  transition: transform 0.15s ease-out;
 }
 
 @keyframes penIdle {

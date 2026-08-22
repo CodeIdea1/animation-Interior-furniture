@@ -18,15 +18,33 @@ const THIRD_SECTION_IMAGES = [
 
 export default function ThirdSection() {
   const [sliderX, setSliderX] = useState(50);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const isDragging = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const sectionElRef = useRef<HTMLElement | null>(null);
   const leafShapeRef = useRef<HTMLDivElement | null>(null);
 
+  // ★ القلم بيتحرك دلوقتي بكتابة الـ transform مباشرة على الـ DOM عبر ref
+  // (بدون أي setState). قبل كده كل mousemove كان بيعمل re-render للسيكشن
+  // كله، وده كان بيهدر فريمات أثناء السكرول لو الإيد بتتحمّش شوية على
+  // التراك باد. sliderXRef بيخلي حساب حركة القلم يقرأ آخر قيمة سحب
+  // من غير ما يستنى re-render.
+  const penImgRef = useRef<HTMLImageElement | null>(null);
+  const sliderXRef = useRef(50);
+
   const mouseRafId = useRef<number | null>(null);
   const pendingMouse = useRef<{ x: number; y: number } | null>(null);
+
+  // ★★ بوابة السكرول (الحل النهائي للتهنيج): طالما السكرول شغال
+  // (وخلال 160ms بعد آخر حدث سكرول)، السيكشن صامت تماماً:
+  // صفر قراءات layout وصفر كتابات styles — يعني صفر منافسة مع
+  // Lenis/GSAP على الفريم وقت الدخول للسيكشن وأثناء السكرول فيه.
+  const scrollingRef = useRef(false);
+  const scrollEndTimer = useRef<number | null>(null);
+  // ★ كاش مستطيل السيكشن: بدل getBoundingClientRect() في كل حدث
+  // ماوس (قراءة تخطيط متزامنة إجبارية)، بنقيس مرة واحدة لكل جلسة
+  // تحويم، وملغيّينه مع أي سكرول أو resize.
+  const sectionRectCache = useRef<DOMRect | null>(null);
 
   // ★ جديد: نفس فلسفة throttle الماوس (rAF) لكن لحركة السحب (sliderX).
   // قبل كده كان setSliderX بيتنفذ مباشرة في كل حدث mousemove/touchmove
@@ -41,8 +59,30 @@ export default function ThirdSection() {
 
   const getPercentFromCache = (clientX: number) => {
     const rect = containerRectCache.current;
-    if (!rect) return sliderX;
+    if (!rect) return sliderXRef.current;
     return (Math.min(Math.max(clientX - rect.left, 0), rect.width) / rect.width) * 100;
+  };
+
+  // ★ تحديث موحّد لقيمة السلايدر: ref فوري (للقراءة داخل نفس الفريم)
+  // + state ( لإعادة رسم clip-path والخط)
+  const applySlider = (value: number) => {
+    sliderXRef.current = value;
+    setSliderX(value);
+  };
+
+  // ★ كتابة transform القلم مباشرة على العنصر داخل rAF واحد لكل فريم،
+  // بدون setState وبالتالي بدون أي re-render للسيكشن أثناء الحركة.
+  const flushPenTransform = () => {
+    const img = penImgRef.current;
+    const pos = pendingMouse.current;
+    if (!img || !pos) return;
+    const delta = sliderXRef.current - 50;
+    const rotate = -8 + delta * 0.1;
+    const skewX = delta * 0.15;
+    const skewY = delta * 0.05;
+    img.style.transform =
+      `translate(${pos.x * 40}px, ${pos.y * 28}px) ` +
+      `rotate(${rotate}deg) skewX(${skewX}deg) skewY(${skewY}deg)`;
   };
 
   const scheduleSliderUpdate = (clientX: number) => {
@@ -50,7 +90,7 @@ export default function ThirdSection() {
     if (dragRafId.current === null) {
       dragRafId.current = requestAnimationFrame(() => {
         if (pendingDragClientX.current !== null) {
-          setSliderX(getPercentFromCache(pendingDragClientX.current));
+          applySlider(getPercentFromCache(pendingDragClientX.current));
         }
         dragRafId.current = null;
       });
@@ -60,27 +100,65 @@ export default function ThirdSection() {
   const onMouseDown = (e: React.MouseEvent) => {
     isDragging.current = true;
     containerRectCache.current = containerRef.current!.getBoundingClientRect();
-    setSliderX(getPercentFromCache(e.clientX));
+    applySlider(getPercentFromCache(e.clientX));
   };
   const onMouseUp = () => { isDragging.current = false; };
 
+  // ★ بوابة السكرول: أي حدث سكرول (شامل زلقات Lenis أثناء الانزلاق)
+  // يشغّل الوضع الصامت فوراً ويلغي أي rAF معلّق عشان مفيش كتابة
+  // styles تحصل جوه فريم سكرول. الوضع بيرجع عادي بعد استقرار 160ms.
+  useEffect(() => {
+    const markScrolling = () => {
+      scrollingRef.current = true;
+      sectionRectCache.current = null; // القياس بقى قديم بعد السكرول
+      pendingMouse.current = null;
+      if (mouseRafId.current !== null) {
+        cancelAnimationFrame(mouseRafId.current);
+        mouseRafId.current = null;
+      }
+      if (scrollEndTimer.current !== null) clearTimeout(scrollEndTimer.current);
+      scrollEndTimer.current = window.setTimeout(() => {
+        scrollingRef.current = false;
+      }, 160);
+    };
+
+    const onResize = () => { sectionRectCache.current = null; };
+
+    window.addEventListener('scroll', markScrolling, { passive: true });
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('scroll', markScrolling);
+      window.removeEventListener('resize', onResize);
+      if (scrollEndTimer.current !== null) clearTimeout(scrollEndTimer.current);
+    };
+  }, []);
+
   const onSectionMouseMove = (e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+    // السحب نشاط مقصود — شغال دايماً (بيستخدم rect متكاش من لحظة
+    // الضغط، فمفيش قراءة layout إضافية أصلاً)
+    if (isDragging.current) scheduleSliderUpdate(e.clientX);
+
+    // ★ أثناء السكرول: خروج فوري — لا قياسات ولا حسابات ولا كتابة
+    if (scrollingRef.current) return;
+
+    // ★ نجمع كل حركات الماوس اللي بتوصل في نفس الفريم، ونعمل تحديث
+    // واحد بس لكل فريم — والقياس من الكاش مش من التخطيط كل مرة
+    if (!sectionRectCache.current) {
+      sectionRectCache.current = e.currentTarget.getBoundingClientRect();
+    }
+    const rect = sectionRectCache.current;
     pendingMouse.current = {
       x: (e.clientX - rect.left) / rect.width - 0.5,
       y: (e.clientY - rect.top) / rect.height - 0.5,
     };
 
-    // ★ نجمع كل حركات الماوس اللي بتوصل في نفس الفريم، ونعمل setState
-    // مرة واحدة بس لكل فريم (مش 60-120 مرة/ثانية زي قبل كده)
     if (mouseRafId.current === null) {
       mouseRafId.current = requestAnimationFrame(() => {
-        if (pendingMouse.current) setMousePos(pendingMouse.current);
+        flushPenTransform();
         mouseRafId.current = null;
       });
     }
-
-    if (isDragging.current) scheduleSliderUpdate(e.clientX);
   };
 
   const onTouchStart = () => {
@@ -96,6 +174,10 @@ export default function ThirdSection() {
   // ★ نوقف انيميشن الورقة (leafDecorSway) وهي خارج نطاق الرؤية،
   // بدل ما تفضل شغالة من لحظة الـ mount طول عمر الصفحة. التحكم عبر
   // ref مباشرة (مش state) عشان محدش يعمل re-render إضافي بسببها.
+  // ★ rootMargin 100%: الانيميشن بيبدأ قبل ما السيكشن يدخل الشاشة
+  // بمسافة فريم كامل — يعني أول rasterize للطبقة المقنّعة (mask) وبدء
+  // الحركة بيحصلوا وهيا برّه الشاشة، بدل ما يحصلوا في نفس الفريم اللي
+  // المستخدم شايف فيه دخول السيكشن (ده كان بيسبب تهنيج عند الدخول).
   useEffect(() => {
     const leaf = leafShapeRef.current;
     const el = sectionElRef.current;
@@ -105,7 +187,7 @@ export default function ThirdSection() {
       ([entry]) => {
         leaf.style.animationPlayState = entry.isIntersecting ? 'running' : 'paused';
       },
-      { threshold: 0 }
+      { threshold: 0, rootMargin: '100% 0px 100% 0px' }
     );
     io.observe(el);
 
@@ -133,15 +215,9 @@ export default function ThirdSection() {
     return () => {
       if (mouseRafId.current) cancelAnimationFrame(mouseRafId.current);
       if (dragRafId.current) cancelAnimationFrame(dragRafId.current);
+      if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
     };
   }, []);
-
-  const penRotate = -8 + (sliderX - 50) * 0.1;
-  const penSkewX = (sliderX - 50) * 0.15;
-  const penSkewY = (sliderX - 50) * 0.05;
-  const penTranslateX = mousePos.x * 40;
-  const penTranslateY = mousePos.y * 28;
-  const penTransform = `translate(${penTranslateX}px, ${penTranslateY}px) rotate(${penRotate}deg) skewX(${penSkewX}deg) skewY(${penSkewY}deg)`;
 
   return (
     <section
@@ -184,10 +260,10 @@ export default function ThirdSection() {
         >
           <div className={styles.handle}>
             <img
+              ref={penImgRef}
               src="/pen.webp"
               alt="drag"
               decoding="async"
-              style={{ transform: penTransform, transition: 'transform 0.15s ease-out' }}
             />
           </div>
         </div>
