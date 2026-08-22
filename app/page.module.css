@@ -5,20 +5,11 @@
   background: #EEEDE7;
 }
 
-.scrollSpacer {
-  height: 510vh;
-  background: #EAE4DF;
-}
-
 .heroCover {
   display: none;
 }
 
 @media (max-width: 768px) {
-  .scrollSpacer {
-    display: none;
-  }
-
   .heroCover {
     display: block;
     position: fixed;

@@ -12,12 +12,12 @@ if (typeof window !== 'undefined') {
 
 // قائمة صور المخدات المتاحة
 const pillowImages = [
-  '/Pillow1-1.png',
-  '/Pillow2.png',
-  '/Pillow3.png', // يمكن تكرارها أو إضافة صور جديدة
-  '/Pillow4.png',
-  '/Pillow5.png',
-  '/Pillow6.png',
+  '/Pillow1-1.webp',
+  '/Pillow2.webp',
+  '/Pillow3.webp',
+  '/Pillow4.webp',
+  '/Pillow5.webp',
+  '/Pillow6.webp',
 ];
 
 const HeroSection = () => {
@@ -36,19 +36,42 @@ const HeroSection = () => {
   const line4Ref = useRef<HTMLImageElement>(null);
   const pillow1Ref = useRef<HTMLDivElement>(null);
   const pillow2Ref = useRef<HTMLDivElement>(null);
+  // ★ طبقة داخلية للأنيميشن: changePillow كان بيعمل tween على نفس
+  // العناصر اللي تموضعها معتمد على transform: translate(%) في CSS
+  // فبتظهر المخدة نازلة وبعدين بترجع فجأة عند clearProps. الحل:
+  // الأنيميشن (scale/y/rotation/opacity) على div داخلي محايد،
+  // والحاويات الخارجية مسؤولتها التموضع بس.
+  const pillow1InnerRef = useRef<HTMLDivElement>(null);
+  const pillow2InnerRef = useRef<HTMLDivElement>(null);
+  const pillow1MobileRef = useRef<HTMLDivElement>(null);
+  const pillow2MobileRef = useRef<HTMLDivElement>(null);
+  const pillow1MobileInnerRef = useRef<HTMLDivElement>(null);
+  const pillow2MobileInnerRef = useRef<HTMLDivElement>(null);
   const layerRef = useRef<HTMLImageElement>(null);
+  // ★ جديد: ref لصورة layer2Image (اللي مكنش ليها ref أصلاً) عشان نقدر
+  // نوقف انيميشنها بنفس طريقة layerRef
+  const layer2Ref = useRef<HTMLImageElement>(null);
 
   const mobilePinRef = useRef<HTMLDivElement>(null);
+  const mobileHeroRef = useRef<HTMLDivElement>(null);
+  const mobileHero2Ref = useRef<HTMLDivElement>(null);
 
   // وظيفة تغيير الصورة مع أنيميشن احترافي
   const changePillow = (index: number) => {
     if (index === selectedPillow) return; // لا تفعل شيئاً إذا كانت نفس الصورة
-    
+
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    // ★ الأنيميشن على الطبقات الداخلية مش الحاويات (شرح فوق)
+    const targetRefs = isMobile
+      ? [pillow1MobileInnerRef.current, pillow2MobileInnerRef.current]
+      : [pillow1InnerRef.current, pillow2InnerRef.current];
+    if (!targetRefs[0] || !targetRefs[1]) return;
+
     // أنيميشن للصورتين بشكل احترافي
     const tl = gsap.timeline();
-    
+
     // اختفاء المخدة الحالية بنفس أسلوب ظهور المخدة الجديدة
-    tl.to([pillow1Ref.current, pillow2Ref.current], {
+    tl.to(targetRefs, {
       scale: 0.7,       // تصغير للحجم 0.7
       opacity: 0,       // اختفاء كامل
       rotation: -15,    // دوران للجهة المعاكسة
@@ -61,26 +84,50 @@ const HeroSection = () => {
       }
     })
     // ظهور المخدة الجديدة بانيميشن مطابق
-    .to([pillow1Ref.current, pillow2Ref.current], {
+    .to(targetRefs, {
       scale: 1,         // تكبير للحجم الطبيعي
       opacity: 1,       // ظهور كامل
       rotation: 0,      // بدون دوران
       y: 0,            // الموضع الطبيعي
       duration: 0.6,    // مدة أطول للظهور
       ease: 'back.out(1.7)', // ease مرن وسلس
+      clearProps: 'y,rotation,scale,opacity',
     });
   };
 
+  // ★ ريفرش تلقائي عند عبور حد الموبايل/الديسكتوب (768px):
+  // أنيميشن الهيرو بتتبني مرة واحدة حسب حجم الشاشة وقت التحميل
+  // (isMobile جوه effect بـ [] deps)، فلو المستخدم كبّر أو صغّر
+  // النافذة عابرًا الحد، التنسيقات والأحجام مش هتتحدث صح —
+  // الحل: إعادة تحميل الصفحة مرة واحدة لحظة العبور بس.
   useEffect(() => {
-    if (!sectionRef.current || !hero2Ref.current || !handRef.current || !whiteBoxRef.current || !lightRef.current || !hero1Ref.current || !light2Ref.current || !linesRef.current || !line1Ref.current || !line2Ref.current || !line3Ref.current || !line4Ref.current || !pillow1Ref.current || !pillow2Ref.current) return;
+    const BREAKPOINT = 768;
+    const startedMobile = window.innerWidth <= BREAKPOINT;
+
+    const onResize = () => {
+      const isMobileNow = window.innerWidth <= BREAKPOINT;
+      if (isMobileNow !== startedMobile) {
+        window.location.reload();
+      }
+    };
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  useEffect(() => {
+    if (!sectionRef.current || !hero2Ref.current || !handRef.current || !whiteBoxRef.current || !lightRef.current || !hero1Ref.current || !light2Ref.current || !linesRef.current || !line1Ref.current || !line2Ref.current || !line3Ref.current || !line4Ref.current) return;
 
     const isMobile = window.innerWidth <= 768;
 
     // على الموبايل: pin scroll مثل الديسكتوب بنسب مختلفة
     if (isMobile) {
+      if (!pillow1MobileRef.current || !pillow2MobileRef.current) return;
+
       gsap.set(hero1Ref.current,                         { scale: 1.15 });
-      gsap.set([pillow1Ref.current, pillow2Ref.current],  { scale: 1.15 });
+      gsap.set([pillow1MobileRef.current, pillow2MobileRef.current],  { scale: 1.15 });
       gsap.set(light2Ref.current,                        { opacity: 0 });
+      gsap.set(whiteBoxRef.current,                      { y: '-0%' });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -89,20 +136,35 @@ const HeroSection = () => {
           end: '+=300%',
           scrub: 0.5,
           pin: true,
+          onLeave: () => {
+            if (layerRef.current) layerRef.current.style.animationPlayState = 'paused';
+          },
+          onEnterBack: () => {
+            if (layerRef.current) layerRef.current.style.animationPlayState = 'running';
+          },
         }
       });
 
       tl.to(hero1Ref.current,                        { scale: 1,        ease: 'power2.out', duration: 1    }, 0);
-      tl.to([pillow1Ref.current, pillow2Ref.current], { scale: 1,        ease: 'power2.out', duration: 1    }, 0);
+      tl.to([pillow1MobileRef.current, pillow2MobileRef.current], { scale: 1,        ease: 'power2.out', duration: 1    }, 0);
       tl.to(hero2Ref.current,                        { y: '-350%',      ease: 'power2.out', duration: 0.8  }, 0);
+      if (mobileHeroRef.current) tl.to(mobileHeroRef.current, { y: '-85%', ease: 'power2.out', duration: 0.8 }, 0);
+      if (mobileHero2Ref.current) {
+        gsap.set(mobileHero2Ref.current, { opacity: 0 });
+        tl.to(mobileHero2Ref.current, { opacity: 1, ease: 'power2.inOut', duration: 1.5 }, 0.2);
+        tl.to(mobileHero2Ref.current, { y: '-85%', ease: 'power2.out', duration: 0.8 }, 0);
+      }
       tl.to(handRef.current,                         { y: '-350%',      ease: 'power2.out', duration: 0.5  }, 0);
       tl.to(lightRef.current,                        { y: '-175%',      ease: 'power2.out', duration: 0.25 }, 0);
       tl.to(light2Ref.current,                       { y: '-175%',      ease: 'power2.out', duration: 0.25 }, 0);
       tl.to(light2Ref.current,                       { opacity: 1,      ease: 'power2.inOut', duration: 0.6 }, 0.1);
-      tl.to(whiteBoxRef.current,                     { y: '-360%',      ease: 'power2.out', duration: 1  }, 0);
+      tl.to(whiteBoxRef.current,                     { y: '-360%',      ease: 'power2.out', duration: 3.5  }, 0);
 
       return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
     }
+
+    // Desktop: التأكد من وجود المخدات
+    if (!pillow1Ref.current || !pillow2Ref.current) return;
 
     // إنشاء الأنيميشن مع ScrollTrigger (desktop فقط)
     const tl = gsap.timeline({
@@ -112,162 +174,141 @@ const HeroSection = () => {
         end: '+=550%',
         scrub: 0.5,
         pin: true,
+        pinSpacing: false,
+        // ★ يعيد حساب القيم function-based (زي بداية الإضاءات y)
+        // تلقائيًا عند أي resize/refresh للصفحة
+        invalidateOnRefresh: true,
+        // ★ الحل الجوهري: layerRef و layer2Ref عندهم filter + animation
+        // infinite مستمر (بالظبط زي مشكلة leafDecor اللي كانت في
+        // السيكشن التالت) — لكن هنا الخطر أكبر لأن الهيرو مُثبَّت
+        // (pin) لمدة +=550% من ارتفاع الشاشة، يعني الانيميشنين دول
+        // فضلوا يعملوا repaint مستمر لمساحة سكرول كبيرة جدًا، حتى
+        // بعد ما بصريًا يتغطوا بالسيكشنز اللي بعدهم (z-index مش
+        // بيوقف الرندر). onLeave/onEnterBack هنا بتوقفهم بالظبط لحظة
+        // ما الهيرو يخرج فعليًا من نطاق الـ pin، وترجعهم لو المستخدم
+        // سكرول لفوق تاني.
+        onLeave: () => {
+          if (layerRef.current) layerRef.current.style.animationPlayState = 'paused';
+          if (layer2Ref.current) layer2Ref.current.style.animationPlayState = 'paused';
+        },
+        onEnterBack: () => {
+          if (layerRef.current) layerRef.current.style.animationPlayState = 'running';
+          if (layer2Ref.current) layer2Ref.current.style.animationPlayState = 'running';
+        },
       }
     });
 
     // تكبير hero1 في البداية
-    gsap.set(hero1Ref.current, {
-      scale: 1.25,
-    });
-
-    // تكبير المخدات في البداية (نفس أنيميشن hero1)
-    gsap.set([pillow1Ref.current, pillow2Ref.current], {
-      scale: 1.25,
-    });
-
-    // تكبير lines في البداية (نفس أنيميشن hero1)
-    gsap.set(linesRef.current, {
-      scale: 1.25,
-    });
-
-    // إخفاء الصور الفردية بـ clip-path (من اليسار لليمين)
+    gsap.set(hero1Ref.current, { scale: 1.25 });
+    gsap.set([pillow1Ref.current, pillow2Ref.current], { scale: 1.25 });
+    gsap.set(linesRef.current, { scale: 1.25 });
     gsap.set([line1Ref.current, line2Ref.current, line3Ref.current, line4Ref.current], {
       clipPath: 'inset(0 100% 0 0)',
     });
 
-    // تصغير hero1 مع السكرول للحجم الطبيعي
-    tl.to(hero1Ref.current, {
-      scale: 1,
-      ease: 'power2.out',
-      duration: 1,
-    }, 0);
+    tl.to(hero1Ref.current, { scale: 1, ease: 'power2.out', duration: 1 }, 0);
+    tl.to([pillow1Ref.current, pillow2Ref.current], { scale: 1, ease: 'power2.out', duration: 1 }, 0);
+    tl.to(linesRef.current, { scale: 1, ease: 'power2.out', duration: 1 }, 0);
+    tl.to(hero2Ref.current, { y: '-450%', ease: 'power2.out', duration: 0.8 }, 0);
+    tl.to(handRef.current, { y: '-580%', ease: 'power2.out', duration: 0.65 }, 0);
 
-    // تصغير المخدات مع السكرول للحجم الطبيعي
-    tl.to([pillow1Ref.current, pillow2Ref.current], {
-      scale: 1,
-      ease: 'power2.out',
-      duration: 1,
-    }, 0);
-
-    // تصغير lines مع السكرول للحجم الطبيعي
-    tl.to(linesRef.current, {
-      scale: 1,
-      ease: 'power2.out',
-      duration: 1,
-    }, 0);
-
-    // تحريك hero2 للأعلى
-    tl.to(hero2Ref.current, {
-      y: '-450%',
-      ease: 'power2.out',
-      duration: 0.8,
-    }, 0);
-
-    // تحريك hand بنفس أنيميشن hero2
-    tl.to(handRef.current, {
-      y: '-450%',
-      ease: 'power2.out',
-      duration: 0.8,
-    }, 0);
-
-    // تحريك light1 للأعلى
-    tl.to(lightRef.current, {
-      y: '-210%',
-      ease: 'power2.out',
-      duration: 0.25,
-    }, 0);
-
-    // إخفاء light2 في البداية
-    gsap.set(light2Ref.current, {
-      opacity: 0,
-      filter: 'none',
+    gsap.set(light2Ref.current, { opacity: 0 });
+    // ★ بداية الإضاءات: أسفل الشاشة بالكامل — قيمة function-based
+    // بتتحسب من جديد تلقائيًا مع كل ScrollTrigger refresh (resize)
+    // عشان مسافة البداية تفضل صحيحة مهما تغير مقاس النافذة
+    gsap.set([lightRef.current, light2Ref.current], {
+      y: () => window.innerHeight + lightRef.current!.offsetHeight,
     });
 
-    // تحريك light2 للأعلى
-    tl.to(light2Ref.current, {
-      y: '-210%',
-      ease: 'power2.out',
-      duration: 0.25,
-    }, 0);
+    // ★ النهاية أعلى من أعلى السكشن بمسافة ثابتة (-350px) —
+    // قيمة ثابتة بالبكسل عشان مكانها النهائي يفضل ثابت في كل المقاسات.
+    // زوّد الرقم (بالسالب) لو عايزها أعلى، وقلله لو عايزها تنزل
+    tl.to([lightRef.current, light2Ref.current], { y: -540, ease: 'power2.out', duration: 0.35 }, 0);
+    tl.to(light2Ref.current, { opacity: 1, ease: 'power2.inOut', duration: 0.8 }, 0.4);
+    tl.to(whiteBoxRef.current, { y: '-200%', ease: 'power2.out', duration: 1.2 }, 0);
 
-    // ظهور light2
-    tl.to(light2Ref.current, {
-      opacity: 1,
-      filter: 'none',
-      ease: 'power2.inOut',
-      duration: 0.6,
-    }, 0.15);
+    tl.to(line1Ref.current, { clipPath: 'inset(0 0% 0 0)', ease: 'power2.inOut', duration: 0.8 }, '+=0.5');
+    tl.to(line2Ref.current, { clipPath: 'inset(0 0% 0 0)', ease: 'power2.inOut', duration: 0.8 }, '-=0.4');
+    tl.to(line3Ref.current, { clipPath: 'inset(0 0% 0 0)', ease: 'power2.inOut', duration: 0.8 }, '-=0.4');
+    tl.to(line4Ref.current, { clipPath: 'inset(0 0% 0 0)', ease: 'power2.inOut', duration: 0.8 }, '-=0.4');
 
-    // تحريك البوكس الأبيض
-    tl.to(whiteBoxRef.current, {
-      y: '-200%',
-      ease: 'power2.out',
-      duration: 1.2,
-    }, 0);
-
-    // أنيميشن ظهور الصور بعد انتهاء الأنيميشنات الحالية (بداية جديدة)
-    // ظهور line1 من اليسار لليمين
-    tl.to(line1Ref.current, {
-      clipPath: 'inset(0 0% 0 0)', // تظهر بالكامل
-      ease: 'power2.inOut',
-      duration: 0.8,
-    }, '+=0.5'); // تبدأ بعد انتهاء الأنيميشنات الحالية + 0.5 ثانية
-
-    // ظهور line2 بالتتابع
-    tl.to(line2Ref.current, {
-      clipPath: 'inset(0 0% 0 0)',
-      ease: 'power2.inOut',
-      duration: 0.8,
-    }, '-=0.4'); // تبدأ قبل انتهاء الأولى بـ 0.4 ثانية
-
-    // ظهور line3 بالتتابع
-    tl.to(line3Ref.current, {
-      clipPath: 'inset(0 0% 0 0)',
-      ease: 'power2.inOut',
-      duration: 0.8,
-    }, '-=0.4');
-
-    // ظهور line4 بالتتابع
-    tl.to(line4Ref.current, {
-      clipPath: 'inset(0 0% 0 0)',
-      ease: 'power2.inOut',
-      duration: 0.8,
-      onComplete: () => {
-        console.log('✅ انتهى انيميشن صور الـ lines!');
-      }
-    }, '-=0.4');
-
-    // فترة انتظار بعد انتهاء الـ lines قبل دخول السيكشن الثاني
-    // انيميشن فارغ لإضافة مساحة في الـ timeline
-    tl.to({}, {
-      duration: 2, // فترة انتظار 2 ثانية
-      onComplete: () => {
-        console.log('⏰ فترة الانتظار انتهت - جاهز لدخول السيكشن الثاني');
-      }
-    });
+    tl.to({}, { duration: 2 });
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, []);
 
-  // أنيميشن تساقط أوراق الشجر محذوف
-
   return (
-    <div ref={mobilePinRef} className={styles.mobilePinWrapper}>
+    <div ref={mobilePinRef} className={styles.mobilePinWrapper} id="hero">
     <section ref={sectionRef} data-hero className={styles.newHeroSection}>
-      {/* الصورة الخلفية الأساسية - hero1.png */}
       <div ref={hero1Ref} className={styles.hero1Background}>
         <picture>
+          <source srcSet="/herooo-mobile.webp" type="image/webp" media="(max-width: 768px)" />
           <source srcSet="/herooo-mobile.png" media="(max-width: 768px)" />
+          <source srcSet="/heroo.webp" type="image/webp" />
           <img src="/heroo.png" alt="Background" className={styles.hero1Image} />
+        </picture>
+        <div className={styles.mobilePillowsWrapper}>
+          <div ref={pillow1MobileRef} className={styles.pillow1Container}>
+            <div ref={pillow1MobileInnerRef}>
+              <img src={pillowImages[selectedPillow]} alt="Pillow 1" className={styles.pillowImage} />
+            </div>
+          </div>
+          <div ref={pillow2MobileRef} className={styles.pillow2Container}>
+            <div ref={pillow2MobileInnerRef}>
+              <img src={pillowImages[selectedPillow]} alt="Pillow 2" className={styles.pillowImage} />
+            </div>
+          </div>
+        </div>
+
+        {/* ★ صور الخطوط (lines) اتنقلت جوه hero1Background عشان
+            إحداثياتها الـ % تبقى نسبة لمرحلة الصورة نفسها مش الشاشة،
+            فتفضل فوق اللوجو في الرسمة مهما تغير مقاس النافذة */}
+        <div ref={linesRef} className={styles.linesContainer}>
+          <div className={styles.line1}>
+            <img ref={line1Ref} src="/line1111.webp" alt="Line 1" className={styles.lineImage} />
+          </div>
+          <div className={styles.line2}>
+            <img ref={line2Ref} src="/line22.webp" alt="Line 2" className={styles.lineImage} />
+          </div>
+          <div className={styles.line3}>
+            <img ref={line3Ref} src="/line333.webp" alt="Line 3" className={styles.lineImage} />
+          </div>
+          <div className={styles.line4}>
+            <img ref={line4Ref} src="/line444.webp" alt="Line 4" className={styles.lineImage} />
+          </div>
+        </div>
+
+      </div>
+
+      {/* ★ الإضاءات على مستوى السكشن (مش جوه مرحلة الصورة):
+          نهايتها مثبتة top:0 بمستوى السكشن المستقر 100vh،
+          فمكانها النهائي مش بيتأثر بمقاس الشاشة إطلاقًا */}
+      <div ref={lightRef} className={styles.lightContainer}>
+        <picture>
+          <source srcSet="/light1.webp" type="image/webp" />
+          <img src="/light1.webp" alt="Light" className={styles.lightImage} />
         </picture>
       </div>
 
-      {/* البوكس الأبيض (خلف hero2) */}
+      <div ref={light2Ref} className={styles.light2Container}>
+        <img src="/light2-new.webp" alt="Light 2" className={styles.light2Image} />
+      </div>
+
+      <div ref={pillow1Ref} className={styles.pillow1Container}>
+        <div ref={pillow1InnerRef}>
+          <img src={pillowImages[selectedPillow]} alt="Pillow 1" className={styles.pillowImage} />
+        </div>
+      </div>
+      <div ref={pillow2Ref} className={styles.pillow2Container}>
+        <div ref={pillow2InnerRef}>
+          <img src={pillowImages[selectedPillow]} alt="Pillow 2" className={styles.pillowImage} />
+        </div>
+      </div>
+
       <div ref={whiteBoxRef} className={styles.whiteBox}>
         <div className={styles.textContainer}>
-          {/* اليسار: النص الوصفي */}
           <div className={styles.leftSection}>
             <p className={styles.sectionLabel}>LUXURY INTERIORS</p>
             <p className={styles.mainDescription}>
@@ -278,33 +319,26 @@ const HeroSection = () => {
             </button>
           </div>
 
-          {/* المنتصف: العنوان الكبير مع الخطوط الأفقية */}
           <div className={styles.centerSection}>
             <div className={styles.titleWithDivider}>
-              {/* الخطوط الأفقية في الأعلى */}
               <div className={styles.dividersContainer}>
-                {/* الخط الأيسر */}
                 <div className={styles.verticalDivider}>
                   <div className={styles.topDiamond}></div>
                   <div className={styles.dividerLine}></div>
                   <div className={styles.bottomDiamond}></div>
                 </div>
-                
-                {/* الخط الأيمن */}
                 <div className={styles.verticalDivider}>
                   <div className={styles.topDiamond}></div>
                   <div className={styles.dividerLine}></div>
                   <div className={styles.bottomDiamond}></div>
                 </div>
               </div>
-              
-              {/* النصوص بجانب بعض */}
+
               <div className={styles.titlePart}>
                 <div className={styles.titleGroup}>
                   <h1 className={`${styles.mainTitle} ${styles.elevatedTitle}`}>ELEVATED</h1>
                   <p className={styles.subtitle}>DESIGNING SPACES.</p>
                 </div>
-                
                 <div className={styles.titleGroup}>
                   <h1 className={`${styles.mainTitle} ${styles.livingTitle}`}>LIVING</h1>
                   <p className={styles.subtitle}>DEFINING LIFESTYLES.</p>
@@ -314,7 +348,6 @@ const HeroSection = () => {
             <p className={styles.establishedText}>EST. 2024</p>
           </div>
 
-          {/* اليمين: الأيقونات والميزات */}
           <div className={styles.rightSection}>
             <div className={styles.featureItem}>
               <div className={styles.featureIcon}>
@@ -357,48 +390,40 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* الصورة الثانية - hero2.png (50% من الطول، 100% من العرض) */}
       <div ref={hero2Ref} className={styles.hero2Container}>
-        <img src="/hero2222.png" alt="Hero 2" className={styles.hero2Image} />
-        {/* صورة layer.png فوق hero222 في أقصى اليسار بالأعلى */}
-        <img ref={layerRef} src="/layer1-1.png" alt="Layer" className={`${styles.layerImage} ${styles.layerImageMobile}`} />
-      </div>
-
-      {/* صورة hand-1.png فوق hero222 في المنتصف تماماً */}
-      <div ref={handRef} className={styles.handContainer}>
         <picture>
-          <source srcSet="/hand-mobile.png" media="(max-width: 768px)" />
-          <img src="/hand3.png" alt="Hand" className={styles.handImage} />
+          <source srcSet="/hero2222.webp" type="image/webp" />
+          <img src="/hero2222.png" alt="Hero 2" className={styles.hero2Image} />
+        </picture>
+        <picture>
+          <source srcSet="/layer1-1.webp" type="image/webp" />
+          <img ref={layerRef} src="/layer1-1.png" alt="Layer" className={`${styles.layerImage} ${styles.layerImageMobile}`} />
         </picture>
       </div>
 
-      {/* صورة light1.png في منتصف السيكشن */}
-      <div ref={lightRef} className={styles.lightContainer}>
-        <img src="/light1-1-1.png" alt="Light" className={styles.lightImage} />
+      <div ref={mobileHeroRef} className={styles.mobileHeroReplacement}>
+        <img src="/3333.webp" alt="Hero Mobile" className={styles.mobileHeroReplacementImage} />
       </div>
 
-      {/* صورة light22.png فوق light1 - تظهر تدريجياً */}
-      <div ref={light2Ref} className={styles.light2Container}>
-        <img src="/light2-2-2.png" alt="Light 2" className={styles.light2Image} />
+      <div ref={mobileHero2Ref} className={styles.mobileHero2Replacement}>
+        <img src="/4444.webp" alt="Hero Mobile 2" className={styles.mobileHeroReplacementImage} />
       </div>
 
-      {/* صورتا Pillow1-1.png في المنتصف */}
-      <div ref={pillow1Ref} className={styles.pillow1Container}>
-        <img src={pillowImages[selectedPillow]} alt="Pillow 1" className={styles.pillowImage} />
-      </div>
-      <div ref={pillow2Ref} className={styles.pillow2Container}>
-        <img src={pillowImages[selectedPillow]} alt="Pillow 2" className={styles.pillowImage} />
+      <div ref={handRef} className={styles.handContainer}>
+        <picture>
+          <source srcSet="/hand-mobile.webp" type="image/webp" media="(max-width: 768px)" />
+          <source srcSet="/hand-mobile.png" media="(max-width: 768px)" />
+          <source srcSet="/hand3.webp" type="image/webp" />
+          <img src="/hand2.webp" alt="Hand" className={styles.handImage} />
+        </picture>
       </div>
 
-      {/* البوكس المستدير لاختيار المخدات */}
       <div className={styles.pillowSelector}>
-        {/* الدوائر الصغيرة للتأثير */}
         <div className={styles.selectorBubbles}>
           <div className={styles.bubble2}></div>
           <div className={styles.bubble1}></div>
         </div>
-        
-        {/* صور المخدات */}
+
         <div className={styles.pillowOptions}>
           {pillowImages.map((image, index) => (
             <div
@@ -412,198 +437,10 @@ const HeroSection = () => {
         </div>
       </div>
 
-      {/* صور الخطوط على اليمين */}
-      <div ref={linesRef} className={styles.linesContainer}>
-        <div className={styles.line1}>
-          <img ref={line1Ref} src="/line1111.png" alt="Line 1" className={styles.lineImage} />
-        </div>
-        <div className={styles.line2}>
-          <img ref={line2Ref} src="/line22.png" alt="Line 2" className={styles.lineImage} />
-        </div>
-        <div className={styles.line3}>
-          <img ref={line3Ref} src="/line333.png" alt="Line 3" className={styles.lineImage} />
-        </div>
-        <div className={styles.line4}>
-          <img ref={line4Ref} src="/line444.png" alt="Line 4" className={styles.lineImage} />
-        </div>
-      </div>
-
-      {/* صورة layer2.png - ثابتة في أسفل السيكشن على اليسار */}
-      <img src="/c.png" alt="Layer 2" className={styles.layer2Image} />
-
-      {/* حاوية أوراق الشجر المتساقطة محذوفة */}
+      <img ref={layer2Ref} src="/c.webp" alt="Layer 2" className={styles.layer2Image} />
     </section>
     </div>
   );
 };
 
 export default HeroSection;
-
-/* ============================================
-   قسم الهيرو القديم - معلق للرجوع إليه لاحقاً
-   ============================================
-
-const HeroSectionOld = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const imagesRef = useRef<(HTMLDivElement | null)[]>([]);
-
-  // صور الديكور والأثاث
-  const decorImages = [
-    '/decor-1.png',
-    '/decor2.png',
-    '/decor3.png',
-    '/decor4.png',
-    '/decor5.png',
-  ];
-
-  const furnitureImages = [
-    '/furniture1.png',
-    '/furniture2.png',
-    '/furniture3.png',
-    '/furniture4.png',
-    '/furniture5.png',
-    '/furniture6.png',
-  ];
-
-  const allImages = [
-    ...decorImages, 
-    ...furnitureImages,
-    ...decorImages,  // نسخة ثانية
-    ...furnitureImages,  // نسخة ثانية
-    ...decorImages,  // نسخة ثالثة
-    ...furnitureImages,  // نسخة ثالثة
-  ];
-
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const images = imagesRef.current.filter((img): img is HTMLDivElement => img !== null);
-    
-    images.forEach((img, index) => {
-      // تحديد اتجاه الخروج
-      const exitDirections = ['right', 'left', 'top', 'bottom', 'top-right', 'top-left', 'bottom-right', 'bottom-left'];
-      const exitDirection = exitDirections[index % 8];
-      
-      // موضع البداية (مركز الشاشة مع تنويع)
-      const startX = (Math.random() - 0.5) * 100;
-      const startY = (Math.random() - 0.5) * 100;
-      
-      // حساب موضع الخروج
-      let exitX = 0;
-      let exitY = 0;
-      
-      switch(exitDirection) {
-        case 'right':
-          exitX = window.innerWidth * 1.4;
-          exitY = (Math.random() - 0.5) * 400;
-          break;
-        case 'left':
-          exitX = -window.innerWidth * 1.4;
-          exitY = (Math.random() - 0.5) * 400;
-          break;
-        case 'top':
-          exitY = -window.innerHeight * 1.4;
-          exitX = (Math.random() - 0.5) * 500;
-          break;
-        case 'bottom':
-          exitY = window.innerHeight * 1.4;
-          exitX = (Math.random() - 0.5) * 500;
-          break;
-        case 'top-right':
-          exitX = window.innerWidth * 1.3;
-          exitY = -window.innerHeight * 1.1;
-          break;
-        case 'top-left':
-          exitX = -window.innerWidth * 1.3;
-          exitY = -window.innerHeight * 1.1;
-          break;
-        case 'bottom-right':
-          exitX = window.innerWidth * 1.3;
-          exitY = window.innerHeight * 1.1;
-          break;
-        case 'bottom-left':
-          exitX = -window.innerWidth * 1.3;
-          exitY = window.innerHeight * 1.1;
-          break;
-      }
-      
-      // تأخير موزع - لجعل الصور مستمرة
-      const totalDuration = 12; // مدة أطول = حركة أبطأ
-      const delayPerImage = totalDuration / allImages.length; // توزيع متساوي
-      const initialDelay = index * delayPerImage;
-      
-      // تعيين الموضع الابتدائي (بدون rotation)
-      gsap.set(img, {
-        x: startX,
-        y: startY,
-        scale: 0,
-        opacity: 0,
-      });
-
-      // إنشاء timeline لكل صورة
-      const tl = gsap.timeline({
-        repeat: -1, // تكرار لا نهائي
-        delay: initialDelay,
-      });
-
-      // حركة واحدة سلسة وبطيئة من البداية للنهاية
-      tl.to(img, {
-        // الوضوح يظهر بسرعة
-        opacity: 1,
-        duration: 1,
-        ease: 'linear',
-      })
-      // ثم الحركة البطيئة
-      .to(img, {
-        x: exitX,
-        y: exitY,
-        scale: 1.5,
-        duration: 15, // حركة بطيئة
-        ease: 'linear',
-      }, '-=1') // تبدأ مع الظهور
-      // الاختفاء في النهاية
-      .to(img, {
-        opacity: 0,
-        duration: 3,
-        ease: 'linear',
-      })
-      // إعادة التعيين
-      .set(img, {
-        x: startX,
-        y: startY,
-        scale: 0,
-        opacity: 0,
-      });
-    });
-
-    return () => {
-      gsap.killTweensOf(imagesRef.current);
-    };
-  }, [allImages.length]);
-
-  return (
-    <section ref={containerRef} className={styles.heroSection}>
-      <div className={styles.imagesContainer}>
-        {allImages.map((src, index) => (
-          <div
-            key={index}
-            ref={(el) => {
-              imagesRef.current[index] = el;
-            }}
-            className={styles.imageWrapper}
-          >
-            <img src={src} alt={`Animation ${index + 1}`} className={styles.image} />
-          </div>
-        ))}
-      </div>
-
-      <div className={styles.heroContent}>
-        <h1 className={styles.heroTitle}>
-          Spaces for people, made for life.
-        </h1>
-      </div>
-    </section>
-  );
-};
-
-============================================ */

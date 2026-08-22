@@ -2,9 +2,10 @@
   position: relative;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
+  box-sizing: border-box; /* الـ padding بقى محسوب جوه الـ 100vh مش زيادة عليه */
   background: #EAE4DF;
   padding-bottom: 9rem;
+  z-index: 22; /* Above second section when it's done */
 }
 
 .compareContainer {
@@ -27,7 +28,6 @@
   margin-top: 2rem;
   border-radius: 16px;
   flex-shrink: 0;
-  filter: drop-shadow(10px 12px 8px rgba(0,0,0,0.28));
 }
 
 @keyframes leafDecorSway {
@@ -37,19 +37,42 @@
   100% { transform: rotate(-10deg) translateX(0px) translateY(0px); }
 }
 
-.leafDecor {
+/* ★ إعادة بناء كاملة لـ leafDecor: بدل <img> عليها filter (مكلف جدًا مع
+   animation مستمر)، بقى عندنا عنصرين div:
+   - leafDecorFade (ثابت، مش بيتحرك): مسؤول بس عن تلاشي الحواف بـ
+     mask-image gradient — بيتحسب مرة واحدة، مفيش تكلفة مستمرة.
+   - leafDecorShape (هو اللي بيتحرك بالانيميشن): بلون خلفية باهت +
+     mask-image بشكل الورقة نفسها، من غير أي filter خالص. الـ mask هنا
+     بيتطبق مرة واحدة كـ "قالب" على الـ layer، وبعدين المتصفح بيقدر
+     يحرك الـ transform بتاعه على الـ GPU مباشرة من غير أي إعادة رسم،
+     لأن مفيش filter يجبره يعيد حساب البكسلات كل فريم. */
+.leafDecorFade {
   position: absolute;
   bottom: -50%;
   right: -40%;
   height: 240%;
-  width: auto;
-  object-fit: contain;
+  width: 55%;
   pointer-events: none;
   z-index: 0;
-  transform-origin: bottom center;
-  filter: brightness(0) invert(0) opacity(0.05);
+  overflow: hidden;
   -webkit-mask-image: linear-gradient(to top, transparent 0%, black 35%);
   mask-image: linear-gradient(to top, transparent 0%, black 35%);
+}
+
+.leafDecorShape {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.05);
+  -webkit-mask-image: url('/2.webp');
+  mask-image: url('/2.webp');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: bottom center;
+  mask-position: bottom center;
+  transform-origin: bottom center;
+  will-change: transform;
   animation: leafDecorSway 6s ease-in-out infinite;
 }
 
@@ -57,8 +80,11 @@
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 16px;
-  overflow: hidden;
+  /* ★ overflow:hidden اتشال من هنا: كان هيقص الـ drop-shadow بتاع
+     الصور عند حدود الصندوق (الظل بيحتاج ~34px مساحة برة البكسلات
+     المرئية). مفيش داعي له دلوقتي لأن الصندوق نفسه من غير خلفية
+     ولا ظل، والصور object-fit:contain بخلفية شفافة فمش محتاجة
+     تقصير بالزوايا. */
 }
 
 /* الصورتان */
@@ -75,6 +101,12 @@
   object-fit: contain;
   pointer-events: none;
   display: block;
+}
+
+/* ★ الشادو على sec3-2-2.webp فقط (الصورة السفلية After) —
+   sec3-1-1.webp (Before) من غير أي filter. */
+.imgBottom img {
+  filter: drop-shadow(10px 12px 9px rgba(0, 0, 0, 0.368));
 }
 
 /* صورة Before أكبر قليلاً */
@@ -190,10 +222,10 @@
     position: relative;
     z-index: 20;
     height: auto;
-    min-height: 100vh;
+    min-height: auto;
     overflow: visible;
     padding-top: 20px;
-    padding-bottom: 0px;
+    padding-bottom: 100px;
   }
 
   .sectionTitle {

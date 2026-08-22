@@ -4,15 +4,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styles from './ProductsSection.module.css';
 
 const products = [
-  { id: '01', name: 'CLOUD LOUNGE',     desc1: 'SOFT CURVES.',      desc2: 'COZY VIBES.',         image: '/product-1.png' },
-  { id: '02', name: 'STRIPED MOD',      desc1: 'BOLD STRIPES.',     desc2: 'RETRO CHARM.',        image: '/product-2.png' },
-  { id: '03', name: 'MINIMAL BOLSTER',  desc1: 'SIMPLE SHAPE.',     desc2: 'MAX COMFORT.',        image: '/product-3.png' },
-  { id: '04', name: 'ARCH ACCENT',      desc1: 'SCULPTURAL &',      desc2: 'STATEMENT-MAKING.',   image: '/product-4.png' },
-  { id: '05', name: 'RATTAN HUG',       desc1: 'NATURAL TOUCH.',    desc2: 'WARM FEEL.',          image: '/product-5.png' },
-  { id: '06', name: 'VELVET RETREAT',   desc1: 'LUXURIOUS LOOK.',   desc2: 'ULTRA SOFT.',         image: '/product-6.png' },
-  { id: '07', name: 'BOUCLÉ BUBBLE',    desc1: 'TEXTURED & TRENDY.',desc2: 'ALWAYS COZY.',        image: '/product-7.png' },
-  { id: '08', name: 'WOODEN FRAME',     desc1: 'CLEAN LINES.',      desc2: 'NATURAL BEAUTY.',     image: '/product-8.png' },
-  { id: '09', name: 'LEATHER LOUNGE',   desc1: 'RICH LEATHER.',     desc2: 'RELAXED STYLE.',      image: '/product-9.png' },
+  { id: '01', name: 'CLOUD LOUNGE',     desc1: 'SOFT CURVES.',      desc2: 'COZY VIBES.',         image: '/product-1.webp' },
+  { id: '02', name: 'STRIPED MOD',      desc1: 'BOLD STRIPES.',     desc2: 'RETRO CHARM.',        image: '/product-2.webp' },
+  { id: '03', name: 'MINIMAL BOLSTER',  desc1: 'SIMPLE SHAPE.',     desc2: 'MAX COMFORT.',        image: '/product-3.webp' },
+  { id: '04', name: 'ARCH ACCENT',      desc1: 'SCULPTURAL &',      desc2: 'STATEMENT-MAKING.',   image: '/product-4.webp' },
+  { id: '05', name: 'RATTAN HUG',       desc1: 'NATURAL TOUCH.',    desc2: 'WARM FEEL.',          image: '/product-5.webp' },
+  { id: '06', name: 'VELVET RETREAT',   desc1: 'LUXURIOUS LOOK.',   desc2: 'ULTRA SOFT.',         image: '/product-6.webp' },
+  { id: '07', name: 'BOUCLÉ BUBBLE',    desc1: 'TEXTURED & TRENDY.',desc2: 'ALWAYS COZY.',        image: '/product-7.webp' },
+  { id: '08', name: 'WOODEN FRAME',     desc1: 'CLEAN LINES.',      desc2: 'NATURAL BEAUTY.',     image: '/product-8.webp' },
+  { id: '09', name: 'LEATHER LOUNGE',   desc1: 'RICH LEATHER.',     desc2: 'RELAXED STYLE.',      image: '/product-9.webp' },
 ];
 
 type Toast = { id: number; type: 'cart' | 'wishlist'; name: string; action: 'added' | 'removed' };
@@ -57,11 +57,11 @@ const ProductsSection: React.FC = () => {
   };
 
   return (
-    <section className={styles.productsSection}>
+    <section id="products" className={styles.productsSection}>
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.topImage}>
-          <img src="/n.png" alt="" />
+          <img src="/n.webp" alt="" />
         </div>
         <h3 className={styles.subtitle}>MODERN</h3>
         <h1 className={styles.title}>COZY CHAIRS</h1>

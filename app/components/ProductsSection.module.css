@@ -5,19 +5,23 @@
   background: #EAE4DF;
   padding: 0 40px 80px;
   direction: ltr;
+  /* ★ لازم يكون أعلى من ThirdSection (z-index: 22): صورة n.webp
+     في .topImage بارزة لفوق بـ top سالب جوه مساحة السيكشن اللي قبلها،
+     ولو السيكشن ده تحت هي تتغطى بخلفية ThirdSection فتبان مقصوصة. */
+  z-index: 23;
 }
 
 @media (max-width: 768px) {
   .productsSection {
-    z-index: 20;
+    z-index: 23;
   }
 }
 
 .topImage {
   position: absolute;
   top: -90px;
-  left: 5%;
-  width: 110%;
+  left: 0;
+  width: 100%;
   z-index: -1;
 }
 
@@ -25,8 +29,6 @@
   width: 100%;
   height: auto;
   display: block;
-  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
 }
 
 .header {
@@ -308,7 +310,6 @@
   min-width: 240px;
   max-width: 300px;
   position: relative;
-  overflow: hidden;
 }
 
 .toastIn {
@@ -591,7 +592,7 @@
   }
 
   .topImage {
-    top: -110px;
+    top: -100px;
   }
 
   .subtitle {
@@ -653,6 +654,12 @@
     font-size: 0.7rem;
     letter-spacing: 1px;
     margin-top: 30px;
+  }
+
+  /* Show action buttons on mobile */
+  .actionButtons {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 

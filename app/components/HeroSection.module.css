@@ -36,6 +36,24 @@
   object-fit: cover;
 }
 
+/* ★ Desktop: مرحلة (stage) بنسبة أبعاد صورة الخلفية نفسها (1688×932)
+   بدل ما الصورة تتقص بـ object-fit:cover مع كل مقاس شاشة.
+   كده أي عنصر جوه المرحلة بإحداثيات % بيتثبت على نقطة ثابتة في
+   الرسمة مهما كبر أو صغرت الشاشة — نفس فكرة حل المخدات في الموبايل.
+   width: max(100%, 100vh×النسبة) تضمن تغطية الشاشة كاملة (cover)
+   والتوسيط بـ inset:0 + margin:auto من غير transform عشان GSAP
+   بيحرك scale على العنصر ده ومحدش يبوظه. */
+@media (min-width: 769px) {
+  .hero1Background {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: max(100%, calc(100vh * 1.8112));
+    height: auto;
+    aspect-ratio: 1688 / 932;
+  }
+}
+
 /* البوكس الأبيض - فوق hero2 */
 .whiteBox {
   position: absolute;
@@ -302,7 +320,7 @@
 @media (max-width: 768px) {
   .whiteBox {
     align-items: flex-start;
-    padding-top: 22vh;
+    padding-top: 24vh;
     height: 100svh;
     z-index: 102;
     will-change: transform;
@@ -379,12 +397,12 @@
   }
 
   .subtitle {
-    font-size: clamp(0.6rem, 2.5vw, 0.8rem);
+    font-size: clamp(0.9rem, 3.5vw, 1.2rem);
     letter-spacing: 0.15em;
   }
 
   .establishedText {
-    font-size: 0.75rem;
+    font-size: 1.05rem;
     letter-spacing: 0.25em;
     margin-top: 4px;
   }
@@ -410,17 +428,57 @@
 
 @media (max-width: 768px) {
   .hero2Container {
-    max-height: 100vh;
-    width: 185%;
-    left: -42%;
+    display: none;
+  }
+}
+
+/* صورة بديلة عن hero2 على الموبايل */
+.mobileHeroReplacement {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileHeroReplacement {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 20;
+  }
+
+  .mobileHeroReplacementImage {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+  }
+}
+
+/* صورة 4444 فوق 3333 */
+.mobileHero2Replacement {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobileHero2Replacement {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: auto;
+    z-index: 21;
+    opacity: 0;
   }
 }
 
 /* صورة hand-1.png فوق hero222 في المنتصف تماماً */
 .handContainer {
   position: absolute;
-  top: 48vh;
-  left: 50.4%;
+  top: 44%; /* للأسفل قليلاً - كان 5% */
+  left: 50.3%;
   transform: translateX(-50%);
   width: 43%;
   height: auto;
@@ -433,9 +491,7 @@
 
 @media (max-width: 768px) {
   .handContainer {
-    top: 9.7vh;
-    width: 65%;
-    max-height: 50vh;
+    display: none;
   }
 }
 
@@ -512,11 +568,15 @@
 /* صورة light1 في الأسفل */
 .lightContainer {
   position: absolute;
-  bottom: -70vh; /* أسفل أكثر */
+  /* ★ الحل النهائي لتثبيت الإضاءات: النهاية دايمًا معلقة من أعلى
+     سكشن الهيرو بالظبط (top:0) — GSAP يبدأها من تحت الشاشة بمسافة
+     محسوبة وينهيها عند y=0، فالمكان النهائي مش بيعتمد إطلاقًا على
+     مقاس الشاشة ولا على مرحلة الصورة */
+  top: 0;
   left: 50.6%;
   transform: translateX(-50%);
   width: auto;
-  max-width: 220px; /* أكبر قليلاً */
+  max-width: 190px;
   z-index: 5;
 }
 
@@ -527,15 +587,25 @@
   display: block;
 }
 
-/* صورة light2 فوق light1 - تظهر تدريجياً */
+/* صورة light2 فوق light1 - ظاهرة دائماً - نفس المكان تماماً */
 .light2Container {
   position: absolute;
-  bottom: -70vh; /* نفس موضع light1 */
-  left: 50.6%;
-  transform: translateX(-50%);
+  top: 0; /* نفس موضع light1 تماماً */
+  left: 50.6%; /* نفس left تماماً */
+  transform: translateX(-50%); /* نفس transform تماماً */
   width: auto;
-  max-width: 220px; /* أكبر قليلاً */
+  max-width: 190px; /* نفس الحجم تماماً */
   z-index: 6; /* فوق light1 */
+  opacity: 0; /* مخفية في البداية - ستظهر بأنيميشن */
+  will-change: transform, opacity; /* تحسين الأداء */
+  pointer-events: none; /* لا تتداخل مع التفاعلات */
+}
+
+.light2Image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 /* صورة pillow1 في المنتصف - يسار - ثابتة */
@@ -545,11 +615,11 @@
   left: 59%; /* لليمين أكثر */
   transform: translate(-120%, -50%);
   width: auto;
-  max-width: 140px;
+  max-width: 135px; /* أصغر بـ 5px */
   z-index: 3; /* تحت hero2 */
   pointer-events: none;
   rotate: 3deg;
-
+  display: block; /* ظاهرة في Desktop */
 }
 
 /* صورة pillow2 في المنتصف - يمين - ثابتة - فوق pillow1 */
@@ -559,12 +629,12 @@
   left: 52%; /* لليمين أكثر */
   transform: translate(20%, -50%);
   width: auto;
-  max-width: 140px;
+  max-width: 135px; /* أصغر بـ 5px */
   z-index: 2; /* تحت hero2 */
   pointer-events: none; 
-    rotate: 5deg;
-        /* filter: drop-shadow(3px 5px 4px rgba(0,0,0,0.28)); */
-
+  rotate: 5deg;
+  display: block; /* ظاهرة في Desktop */
+  /* filter: drop-shadow(3px 5px 4px rgba(0,0,0,0.28)); */
 }
 
 .light2Image {
@@ -587,11 +657,17 @@
   top: 39%; /* للأسفل أكثر */
   left: 68%; /* لليمين أكثر */
   transform: translateX(-50%) scale(0.85); /* أصغر قليلاً */
-  z-index: 9; /* تحت hero2 */
+  z-index: 19; /* فوق معظم العناصر لكن تحت 3333 و 4444 */
   display: flex;
   align-items: center;
   gap: 12px; /* مسافة أصغر */
   pointer-events: all; /* يمكن التفاعل معه */
+  visibility: hidden;
+  animation: showSelector 0s ease 0.6s forwards;
+}
+
+@keyframes showSelector {
+  to { visibility: visible; }
 }
 
 /* الدوائر الصغيرة للتأثير */
@@ -639,6 +715,12 @@
   backdrop-filter: blur(13px) saturate(1.4);
   transition: all 0.3s ease;
   isolation: isolate;
+  opacity: 0;
+  animation: fadeInSelector 0.5s ease 0.8s forwards;
+}
+
+@keyframes fadeInSelector {
+  to { opacity: 1; }
 }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -707,27 +789,87 @@
   font-weight: bold;
 }
 
+/* wrapper المخدات داخل الباكجراوند للموبايل */
+.mobilePillowsWrapper {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* إخفاء المخدات الأصلية (Desktop) في الموبايل - يتم التحكم بها من .pillow1Container و .pillow2Container مباشرة */
+  
+  /* الحل النهائي: container واحد بنسبة ثابتة */
+  .hero1Background {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: auto;
+    aspect-ratio: 853 / 1844;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .hero1Image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: unset;
+  }
+
+  .mobilePillowsWrapper {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .mobilePillowsWrapper .pillow1Container {
+    position: absolute;
+    width: 20%;
+    max-width: unset;
+    left: 69%;
+    top: 63.5%;
+    transform: translate(-100%, -50%);
+    rotate: 3deg;
+    display: block;
+  }
+
+  .mobilePillowsWrapper .pillow2Container {
+    position: absolute;
+    width: 20%;
+    max-width: unset;
+    left: 57%;
+    top: 63%;
+    transform: translate(0%, -50%);
+    rotate: 5deg;
+    display: block;
+  }
+}
+
 /* تحسينات للموبايل */
 @media (max-width: 768px) {
+  /* ★ إخفاء مخدات الديسكتوب في الموبايل فقط.
+     مهم من غير !important: عشان القاعدة الأكثر تحديدًا
+     .mobilePillowsWrapper .pillowXContainer (نفس الكلاس!)
+     تقدر تعرض نسخ الموبايل — الـ !important هنا كانت بتخفي
+     الاتنين مع بعض وعلشان كده المخدات ما كانتش تظهر. */
   .pillow1Container {
-    max-width: 70px;
-    left: 72%;
-    top: 68%;
-    transform: translate(-90%, -50%);
+    display: none;
   }
 
   .pillow2Container {
-    max-width: 70px;
-    left: 66%;
-    top: 68%;
-    transform: translate(-10%, -50%);
+    display: none;
   }
 
   .lightContainer,
   .light2Container {
-    max-width: 130px;
-    bottom: -15vh;
-    left: calc(50.6% + 2px);
+    display: none;
   }
 
   .pillowSelector {
@@ -788,8 +930,8 @@
 /* صور الخطوط على اليمين */
 .linesContainer {
   position: absolute;
-  bottom: 57.3%; /* للأعلى قليلاً */
-  right: 2%; /* لليمين أكثر (رقم أصغر = أقرب لليمين) */
+  bottom: 57%; /* للأعلى قليلاً */
+  right: 2.6%; /* لليمين أكثر (رقم أصغر = أقرب لليمين) */
   display: flex;
   flex-direction: column;
   gap: 0; /* بدون مسافة بينهم */
@@ -798,7 +940,9 @@
 
 .lineImage {
   width: auto;
-  max-width: 110px;
+  /* ★ أصغر قليلاً + علاقة عكسية خفيفة مع عرض الشاشة:
+     كل ما الديسكتوب أكبر، الصورة تنكمش شوية (0.9vw لكل وحدة عرض) */
+  max-width: calc(104px - 0.9vw);
   height: auto;
   display: block;
   object-fit: contain;

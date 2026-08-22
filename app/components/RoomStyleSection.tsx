@@ -5,10 +5,10 @@ import { gsap } from 'gsap';
 import styles from './RoomStyleSection.module.css';
 import RainCanvas from './RainCanvas';
 
-const chairs = ['/chair--1.png', '/chair--2.png', '/chair--3.png', '/chair--4.png'];
-const trees  = ['/tree1--1.png', '/tree1--2.png', '/tree1--3.png', '/tree1--4.png'];
-const trees2 = ['/tree--2-1.png', '/tree--2-2.png', '/tree--2-3.png', '/tree--2-4.png'];
-const decors = ['/decor1.png', '/decor2.png', '/decor3.png', '/decor44.png'];
+const chairs = ['/chair--1.webp', '/chair--2.webp', '/chair--3.webp', '/chair--4.webp'];
+const trees  = ['/tree1--1.webp', '/tree1--2.webp', '/tree1--3.webp', '/tree1--4.webp'];
+const trees2 = ['/tree--2-1.webp', '/tree--2-2.webp', '/tree--2-3.webp', '/tree--2-4.webp'];
+const decors = ['/decor1.webp', '/decor2.webp', '/decor3.webp', '/decor44.webp'];
 
 type SwitchType = 'chair' | 'tree' | 'tree2' | 'decor';
 
@@ -145,17 +145,17 @@ export default function RoomStyleSection() {
   const decor = useSwitch(0, decorRef, 'decor');
 
   return (
-    <div className={styles.sectionWrapper}>
+    <div id="room-style" className={styles.sectionWrapper}>
     <section ref={sectionRef} className={styles.section}>
       <RainCanvas visible={rainOn} />
-      <img src="/window-tree-1.png" alt="" className={styles.windowTree} />
-      <img src="/window-tree-2.png" alt="" className={styles.windowTree2} />
+      <img src="/window-tree-1.webp" alt="" className={styles.windowTree} />
+      <img src="/window-tree-2.webp" alt="" className={styles.windowTree2} />
       <picture>
-        <source srcSet="/sec-mobile.png" media="(max-width: 768px)" />
-        <img src="/sec4-11.png" alt="" className={styles.bgImg} />
+        <source srcSet="/sec-mobile.webp" media="(max-width: 768px)" />
+        <img src="/sec4-11.webp" alt="" className={styles.bgImg} />
       </picture>
-      <img ref={windowRef} src="/window-3.png" alt="" className={styles.windowTop} />
-      <img ref={curtainRef} src="/curtain.png" alt="" className={styles.curtain} />
+      <img ref={windowRef} src="/window-3.webp" alt="" className={styles.windowTop} />
+      <img ref={curtainRef} src="/curtain.webp" alt="" className={styles.curtain} />
       <div className={styles.windowClickZone} onClick={toggleWindow} />
 
       {/* الكرسي - منتصف السيكشن */}
